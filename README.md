@@ -23,3 +23,8 @@ This version uses Vercel OIDC + Google Cloud Workload Identity Federation. It do
 A race appears only when Registry `Status=Live` and `Portal Enabled=Yes`. Its race Sheet must contain `App Lookup` with columns: First Name, Last Name, Email, Bib Number, Heat Number, Heat Name, Start Time.
 
 Email is used only by the server as a lookup key and is never returned by the API.
+
+
+## v0.2.1
+
+Explicitly requests `https://www.googleapis.com/auth/spreadsheets.readonly` for the impersonated Google service-account token so the portal can read Google Sheets through Workload Identity Federation.
