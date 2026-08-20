@@ -1,8 +1,18 @@
-# Urban Iron Participant Portal — OIDC build
+# Urban Iron Participant Portal — OIDC v4
 
-This version uses Vercel OIDC + Google Cloud Workload Identity Federation. It does not use or store a Google service-account JSON key.
+Vercel OIDC + Google Cloud Workload Identity Federation, with Google Sheets read-only access.
+
+## v4 participant experience
+
+- Race password is requested once after a participant selects a race.
+- Successful password entry creates a short-lived, race-specific session token; the password field disappears for the session.
+- Participant search supports partial first name, partial last name, partial email, full name, and light typo tolerance for names. Email addresses are never returned to the browser.
+- Multiple matches are shown as a selectable list.
+- Participant detail labels are explicit: Heat, Bib Number, Estimated Start Time.
+- Participants can open their heat roster and see everyone assigned to that heat without exposing emails.
 
 ## Required Vercel environment variables
+
 - GCP_PROJECT_ID
 - GCP_PROJECT_NUMBER
 - GCP_SERVICE_ACCOUNT_EMAIL
@@ -10,21 +20,3 @@ This version uses Vercel OIDC + Google Cloud Workload Identity Federation. It do
 - GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID
 - RACE_REGISTRY_SHEET_ID
 - RACE_PASSWORDS_SHEET_ID
-
-## Google-side requirements
-- Google Sheets API enabled
-- Security Token Service API enabled
-- IAM Service Account Credentials API enabled
-- Vercel Workload Identity provider configured
-- Production Vercel subject granted Workload Identity User on the service account
-- Service account shared as Viewer on the Race Registry, Race Passwords, and each live race Sheet
-
-## Publishing contract
-A race appears only when Registry `Status=Live` and `Portal Enabled=Yes`. Its race Sheet must contain `App Lookup` with columns: First Name, Last Name, Email, Bib Number, Heat Number, Heat Name, Start Time.
-
-Email is used only by the server as a lookup key and is never returned by the API.
-
-
-## v0.2.1
-
-Explicitly requests `https://www.googleapis.com/auth/spreadsheets.readonly` for the impersonated Google service-account token so the portal can read Google Sheets through Workload Identity Federation.
