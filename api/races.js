@@ -1,0 +1,3 @@
+const { google } = require('googleapis');
+function auth(){return new google.auth.GoogleAuth({credentials:JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON),scopes:['https://www.googleapis.com/auth/spreadsheets.readonly']});}
+module.exports=async(req,res)=>{try{const sheets=google.sheets({version:'v4',auth:auth()});const r=await sheets.spreadsheets.values.get({spreadsheetId:process.env.RACE_REGISTRY_SHEET_ID,range:"'Race Registry'!A2:J"});const rows=r.data.values||[];const races=rows.filter(x=>x[4]==='Live'&&x[5]==='Yes').map(x=>({id:x[0],city:x[1],date:x[2],lastUpdated:x[6]}));res.setHeader('Cache-Control','s-maxage=60, stale-while-revalidate=300');res.json({races});}catch(e){res.status(500).json({error:'Unable to load races'});}};
