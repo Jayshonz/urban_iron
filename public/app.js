@@ -118,17 +118,34 @@ async function search() {
 }
 
 function renderParticipant(person) {
+  const heatLabel = person.heatName || 'TBD';
+  const heatNumber = heatDisplayNumber(heatLabel);
   $('result').innerHTML = `
     <button class="selected-person" id="selectedPerson">${esc(fullName(person))}</button>
+    <div class="share-card" aria-label="${esc(heatLabel)}">
+      <div class="share-card-inner">
+        <img class="share-logo" src="/urban-iron-logo.png" alt="Urban Iron">
+        <div class="share-heat-label">HEAT</div>
+        <div class="share-heat-number">${esc(heatNumber)}</div>
+        <div class="share-presented">PRESENTED BY</div>
+        <div class="share-create">create</div>
+        <div class="checkerboard" aria-hidden="true"></div>
+      </div>
+    </div>
     <div class="card">
-      <div class="detail-row"><span>Heat</span><strong>${esc(person.heatName || 'TBD')}</strong></div>
+      <div class="detail-row"><span>Heat</span><strong>${esc(heatLabel)}</strong></div>
       <div class="detail-row"><span>Bib Number</span><strong>${esc(person.bib || '—')}</strong></div>
       <div class="detail-row"><span>Estimated Start Time</span><strong>${esc(person.start || 'TBD')}</strong></div>
-      <button class="heat-button" id="viewHeat">View everyone in ${esc(person.heatName || 'this heat')} →</button>
+      <button class="heat-button" id="viewHeat">View everyone in ${esc(heatLabel)} →</button>
       <div id="heatRoster"></div>
     </div>`;
   $('selectedPerson').onclick = () => showHeat(person);
   $('viewHeat').onclick = () => showHeat(person);
+}
+
+function heatDisplayNumber(heatName) {
+  const match = String(heatName || '').match(/(\d+(?:\.\d+)?)\s*$/);
+  return match ? match[1] : heatName || '—';
 }
 
 async function showHeat(person) {
