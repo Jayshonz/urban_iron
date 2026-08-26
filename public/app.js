@@ -128,7 +128,7 @@ function renderParticipant(person) {
         <div class="share-heat-label">HEAT</div>
         <div class="share-heat-number">${esc(heatNumber)}</div>
         <div class="share-presented">PRESENTED BY</div>
-        <div class="share-create">create</div>
+        <img class="share-create-logo" src="/create-logo.png" alt="Create">
         <div class="checkerboard" aria-hidden="true"></div>
       </div>
     </div>
