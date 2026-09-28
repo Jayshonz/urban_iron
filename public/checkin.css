@@ -1,0 +1,14 @@
+.checkin-entry{width:100%;margin:10px 0 18px;background:var(--acid);font-weight:900;letter-spacing:1.5px;cursor:pointer}
+.checkin-entry.checked{background:white}
+.checkin-screen{min-height:68vh;display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 0 0}
+.checkin-back{align-self:flex-start}
+.checkin-name{font-size:18px;font-weight:800;margin-top:32px;text-transform:none}
+.checkin-bib-label{font-size:12px;font-weight:900;letter-spacing:3px;margin-top:32px}
+.checkin-bib{font-size:clamp(150px,36vw,270px);font-weight:900;letter-spacing:-10px;line-height:.9;margin:8px 0 18px}
+.checkin-meta{font-size:18px;font-weight:800}
+.checkin-instruction{max-width:440px;font-size:15px;line-height:1.45;margin:auto auto 16px;padding:28px 12px 0}
+.confirm-checkin,.checkin-return{width:100%;font-weight:900;padding:20px;margin-top:12px;cursor:pointer}
+.confirm-checkin{background:var(--acid)}
+.confirm-checkin:disabled{opacity:.6;cursor:wait}
+.checkin-success{width:100%;margin:auto 0 14px;padding:20px;background:var(--acid);font-size:25px;font-weight:900}
+@media(max-width:600px){.checkin-screen{min-height:72vh}.checkin-bib{font-size:52vw}.checkin-meta{font-size:16px}}
