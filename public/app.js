@@ -164,16 +164,36 @@ function renderCheckIn(person) {
   $('result').innerHTML = `
     <div class="checkin-screen">
       <button class="text-button checkin-back" id="checkInBack">← Back to my race info</button>
+      <img class="checkin-logo" src="/urban-iron-checkin-logo.png" alt="Urban Iron">
+      <div class="checkin-title">RACE DAY CHECK-IN</div>
+      <div class="checkin-divider"></div>
       <div class="checkin-name">${esc(fullName(person))}</div>
-      <div class="checkin-bib-label">BIB</div>
       <div class="checkin-bib">${esc(person.bib || '—')}</div>
       <div class="checkin-meta">Heat ${esc(heat || 'TBD')} · ${esc(division)}</div>
+      <div class="checkin-divider"></div>
       ${person.checkedIn ? `
         <div class="checkin-success">✓ CHECKED IN</div>
         <button class="checkin-return" id="checkInReturn">Back to My Race Info</button>
       ` : `
-        <div class="checkin-instruction">Present this screen to the check-in team. A team member will confirm your check-in.</div>
-        <button class="confirm-checkin" id="confirmCheckIn">TEAM MEMBER: CONFIRM CHECK-IN</button>
+        <div class="checkin-team-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 48" role="img">
+            <circle cx="32" cy="10" r="7"></circle>
+            <circle cx="14" cy="16" r="6"></circle>
+            <circle cx="50" cy="16" r="6"></circle>
+            <path d="M20 42v-7c0-8 5-12 12-12s12 4 12 12v7H20z"></path>
+            <path d="M4 42v-5c0-6 4-10 10-10 3 0 5 1 7 2"></path>
+            <path d="M60 42v-5c0-6-4-10-10-10-3 0-5 1-7 2"></path>
+          </svg>
+        </div>
+        <div class="checkin-instruction">Present this screen to the check-in team.</div>
+        <button class="confirm-checkin" id="confirmCheckIn">
+          <span class="team-only">*TEAM MEMBER USE ONLY*</span>
+          <span>CONFIRM CHECK-IN</span>
+        </button>
+        <div class="checkin-presented">
+          <span>Presented by</span>
+          <img src="/create-logo-orange.png" alt="Create">
+        </div>
         <div id="checkInMessage"></div>
       `}
     </div>`;
@@ -200,7 +220,7 @@ async function confirmCheckIn() {
     renderCheckIn(currentPerson);
   } catch (error) {
     button.disabled = false;
-    button.textContent = 'TEAM MEMBER: CONFIRM CHECK-IN';
+    button.innerHTML = '<span class="team-only">*TEAM MEMBER USE ONLY*</span><span>CONFIRM CHECK-IN</span>';
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
   }
 }
