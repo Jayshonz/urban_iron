@@ -1,3 +1,10 @@
+import {
+  checkedInFromMatch,
+  findCheckInParticipant,
+  getCheckInData,
+  getCheckInEnabled,
+  raceCheckInEnabled,
+} from './check-in-data.js';
 import { getContext, getLookupRows, mapParticipant, norm } from './data.js';
 import { verifyRaceSession } from './session.js';
 
@@ -26,12 +33,19 @@ function scoreRow(row, q) {
   if (values.some((v) => v.startsWith(q))) return 90;
   if (values.some((v) => v.includes(q))) return 80;
 
-  // Light typo tolerance for names only. Avoid overly broad email fuzzy matches.
   const nameCandidates = [first, last, full].filter(Boolean);
   const best = Math.min(...nameCandidates.map((v) => editDistance(v, q)));
   const limit = q.length >= 7 ? 2 : q.length >= 4 ? 1 : 0;
   if (best <= limit) return 60 - best;
   return 0;
+}
+
+function withHeatType(person) {
+  const label = String(person.heatName || '');
+  return {
+    ...person,
+    heatType: /competitive/i.test(label) ? 'Competitive' : /vibes/i.test(label) ? 'Vibes' : '',
+  };
 }
 
 export default async function handler(req, res) {
@@ -48,16 +62,35 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Session expired. Enter the race password again.' });
     }
 
-    const rows = await getLookupRows(context.sheets, context.spreadsheetId);
+    const [rows, registryRows] = await Promise.all([
+      getLookupRows(context.sheets, context.spreadsheetId),
+      getCheckInEnabled(context.sheets),
+    ]);
+    const checkInEnabled = raceCheckInEnabled(registryRows, raceId);
+
+    let checkInData = null;
+    try {
+      checkInData = await getCheckInData(context.sheets, context.spreadsheetId);
+    } catch (error) {
+      console.warn('check-in status unavailable', error.message);
+    }
+
     const results = rows
       .map((row) => ({ row, score: scoreRow(row, q) }))
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score || norm(`${a.row[0]} ${a.row[1]}`).localeCompare(norm(`${b.row[0]} ${b.row[1]}`)))
       .slice(0, 20)
-      .map((item) => mapParticipant(item.row));
+      .map((item) => {
+        const participant = withHeatType(mapParticipant(item.row));
+        const match = checkInData ? findCheckInParticipant(checkInData, participant) : null;
+        return {
+          ...participant,
+          checkedIn: checkInData ? checkedInFromMatch(checkInData, match) : false,
+        };
+      });
 
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ results });
+    return res.status(200).json({ results, checkInEnabled });
   } catch (error) {
     console.error('lookup error', error);
     return res.status(500).json({ error: 'Lookup unavailable' });

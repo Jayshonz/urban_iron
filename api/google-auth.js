@@ -19,17 +19,12 @@ export function getGoogleAuthClient() {
     subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
     token_url: 'https://sts.googleapis.com/v1/token',
     service_account_impersonation_url: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${process.env.GCP_SERVICE_ACCOUNT_EMAIL}:generateAccessToken`,
-    subject_token_supplier: {
-      getSubjectToken: getVercelOidcToken,
-    },
+    subject_token_supplier: { getSubjectToken: getVercelOidcToken },
   });
 
   if (!client) throw new Error('Unable to create Google external account client');
 
-  // Request only the Google Sheets read-only scope for the impersonated
-  // service-account token. Without this, google-auth-library defaults to
-  // cloud-platform, which does not authorize Google Sheets reads.
-  client.scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-
+  // Check-in and admin toggles require narrowly-scoped Google Sheets writes.
+  client.scopes = ['https://www.googleapis.com/auth/spreadsheets'];
   return client;
 }

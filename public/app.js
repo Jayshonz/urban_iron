@@ -1,5 +1,7 @@
 let selected = null;
 let accessToken = null;
+let currentPerson = null;
+let checkInEnabled = false;
 const $ = (id) => document.getElementById(id);
 
 async function api(path, body) {
@@ -35,6 +37,8 @@ async function load() {
 function choose(race) {
   selected = race;
   accessToken = null;
+  currentPerson = null;
+  checkInEnabled = Boolean(race.checkInEnabled);
   $('races').hidden = true;
   $('status').hidden = true;
   $('raceFlow').hidden = false;
@@ -51,6 +55,7 @@ function choose(race) {
 $('back').onclick = () => {
   selected = null;
   accessToken = null;
+  currentPerson = null;
   $('raceFlow').hidden = true;
   $('races').hidden = false;
   $('status').hidden = false;
@@ -90,6 +95,7 @@ async function search() {
       accessToken,
       query: $('query').value,
     });
+    checkInEnabled = Boolean(data.checkInEnabled);
     if (!data.results.length) {
       result.innerHTML = '<div class="error">No matches found. Try a first name, last name, or registration email.</div>';
       return;
@@ -118,10 +124,16 @@ async function search() {
 }
 
 function renderParticipant(person) {
+  currentPerson = person;
   const heatLabel = person.heatName || 'TBD';
   const heatNumber = heatDisplayNumber(heatLabel);
+  const checkInButton = checkInEnabled
+    ? `<button class="checkin-entry ${person.checkedIn ? 'checked' : ''}" id="openCheckIn">${person.checkedIn ? '✓ CHECKED IN' : 'CHECK IN'}</button>`
+    : '';
+
   $('result').innerHTML = `
     <button class="selected-person" id="selectedPerson">${esc(fullName(person))}</button>
+    ${checkInButton}
     <div class="share-card" aria-label="${esc(heatLabel)}">
       <div class="share-card-inner">
         <img class="share-logo" src="/urban-iron-logo.png" alt="Urban Iron">
@@ -139,17 +151,94 @@ function renderParticipant(person) {
       <button class="heat-button" id="viewHeat">View everyone in ${esc(heatLabel)} →</button>
       <div id="heatRoster"></div>
     </div>`;
+
   $('selectedPerson').onclick = () => showHeat(person);
   $('viewHeat').onclick = () => showHeat(person);
+  if ($('openCheckIn')) $('openCheckIn').onclick = () => renderCheckIn(person);
+}
+
+function renderCheckIn(person) {
+  currentPerson = person;
+  const division = person.heatType || heatDivision(person.heatName) || 'Race';
+  const heat = person.heatNumber || heatDisplayNumber(person.heatName);
+  $('result').innerHTML = `
+    <div class="checkin-screen">
+      <button class="text-button checkin-back" id="checkInBack">← Back to my race info</button>
+      <img class="checkin-logo" src="/urban-iron-checkin-logo.png" alt="Urban Iron">
+      <div class="checkin-title">RACE DAY CHECK-IN</div>
+      <div class="checkin-divider"></div>
+      <div class="checkin-name">${esc(fullName(person))}</div>
+      <div class="checkin-bib">${esc(person.bib || '—')}</div>
+      <div class="checkin-meta">Heat ${esc(heat || 'TBD')} · ${esc(division)}</div>
+      <div class="checkin-divider"></div>
+      ${person.checkedIn ? `
+        <div class="checkin-success">✓ CHECKED IN</div>
+        <button class="checkin-return" id="checkInReturn">Back to My Race Info</button>
+      ` : `
+        <div class="checkin-team-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 48" role="img">
+            <circle cx="32" cy="10" r="7"></circle>
+            <circle cx="14" cy="16" r="6"></circle>
+            <circle cx="50" cy="16" r="6"></circle>
+            <path d="M20 42v-7c0-8 5-12 12-12s12 4 12 12v7H20z"></path>
+            <path d="M4 42v-5c0-6 4-10 10-10 3 0 5 1 7 2"></path>
+            <path d="M60 42v-5c0-6-4-10-10-10-3 0-5 1-7 2"></path>
+          </svg>
+        </div>
+        <div class="checkin-instruction">Present this screen to the check-in team.</div>
+        <button class="confirm-checkin" id="confirmCheckIn">
+          <span class="team-only">*TEAM MEMBER USE ONLY*</span>
+          <span>CONFIRM CHECK-IN</span>
+        </button>
+        <div class="checkin-presented">
+          <span>Presented by</span>
+          <img src="/create-logo-orange.png" alt="Create">
+        </div>
+        <div id="checkInMessage"></div>
+      `}
+    </div>`;
+
+  $('checkInBack').onclick = () => renderParticipant(person);
+  if ($('checkInReturn')) $('checkInReturn').onclick = () => renderParticipant(person);
+  if ($('confirmCheckIn')) $('confirmCheckIn').onclick = confirmCheckIn;
+}
+
+async function confirmCheckIn() {
+  const button = $('confirmCheckIn');
+  const message = $('checkInMessage');
+  button.disabled = true;
+  button.textContent = 'CONFIRMING…';
+  try {
+    await api('/api/check-in', {
+      raceId: selected.id,
+      accessToken,
+      first: currentPerson.first,
+      last: currentPerson.last,
+      bib: currentPerson.bib,
+    });
+    currentPerson = { ...currentPerson, checkedIn: true };
+    renderCheckIn(currentPerson);
+  } catch (error) {
+    button.disabled = false;
+    button.innerHTML = '<span class="team-only">*TEAM MEMBER USE ONLY*</span><span>CONFIRM CHECK-IN</span>';
+    message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
+  }
 }
 
 function heatDisplayNumber(heatName) {
-  const match = String(heatName || '').match(/(\d+(?:\.\d+)?)\s*$/);
+  const match = String(heatName || '').match(/(\d+(?:\.\d+)?)/);
   return match ? match[1] : heatName || '—';
+}
+
+function heatDivision(heatName) {
+  if (/competitive/i.test(String(heatName || ''))) return 'Competitive';
+  if (/vibes/i.test(String(heatName || ''))) return 'Vibes';
+  return '';
 }
 
 async function showHeat(person) {
   const roster = $('heatRoster');
+  if (!roster) return;
   roster.innerHTML = '<p class="roster-loading">Loading heat…</p>';
   try {
     const data = await api('/api/heat', {

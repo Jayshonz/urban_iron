@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { getGoogleAuthClient } from './google-auth.js';
+import { raceCheckInEnabled } from './check-in-data.js';
 
 export default async function handler(req, res) {
   try {
@@ -7,7 +8,7 @@ export default async function handler(req, res) {
     const sheets = google.sheets({ version: 'v4', auth });
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.RACE_REGISTRY_SHEET_ID,
-      range: "'Race Registry'!A2:J",
+      range: "'Race Registry'!A2:K",
     });
 
     const rows = response.data.values || [];
@@ -18,6 +19,7 @@ export default async function handler(req, res) {
         city: row[1],
         date: row[2],
         lastUpdated: row[6],
+        checkInEnabled: raceCheckInEnabled(rows, row[0]),
       }));
 
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
