@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { getGoogleAuthClient } from './google-auth.js';
 import { raceCheckInEnabled } from './check-in-data.js';
+import { raceRequiresPassword } from './data.js';
 
 export default async function handler(req, res) {
   try {
@@ -20,6 +21,7 @@ export default async function handler(req, res) {
         date: row[2],
         lastUpdated: row[6],
         checkInEnabled: raceCheckInEnabled(rows, row[0]),
+        requiresPassword: raceRequiresPassword(row[0]),
       }));
 
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
