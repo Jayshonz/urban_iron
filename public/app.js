@@ -210,10 +210,6 @@ function renderCheckIn(person) {
           </svg>
         </div>
         <div class="checkin-instruction">Present this screen to the check-in team.</div>
-        <div class="checkin-pin-wrap">
-          <label for="checkInPin">Plug in PIN</label>
-          <input id="checkInPin" class="checkin-pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" placeholder="PIN">
-        </div>
         <button class="confirm-checkin" id="confirmCheckIn">
           <span class="team-only">*TEAM MEMBER USE ONLY*</span>
           <span>CONFIRM CHECK-IN</span>
@@ -243,7 +239,6 @@ async function confirmCheckIn() {
       first: currentPerson.first,
       last: currentPerson.last,
       bib: currentPerson.bib,
-      pin: $('checkInPin') ? $('checkInPin').value : '',
     });
     currentPerson = { ...currentPerson, checkedIn: true };
     renderCheckIn(currentPerson);
