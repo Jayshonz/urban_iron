@@ -48,7 +48,7 @@ async function choose(race) {
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
 
-  if (race.requiresPassword === false) {
+  if (race.requiresPassword === false || race.id === 'la-2026-10-04') {
     $('gate').hidden = true;
     $('searchPanel').hidden = true;
     await unlockPasswordlessRace();
