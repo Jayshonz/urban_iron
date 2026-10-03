@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
   try {
     const { raceId, accessToken, first, last, bib } = req.body || {};
-    if (!raceId || !accessToken || !first || !last || !bib) {
+    if (!raceId || !accessToken || !first || !bib) {
       return res.status(400).json({ error: 'Missing participant information' });
     }
     const context = await getContext(raceId);
