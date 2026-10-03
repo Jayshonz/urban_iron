@@ -5,6 +5,12 @@ export function norm(value) {
   return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+const PASSWORDLESS_RACE_IDS = new Set(['la-2026-10-04']);
+
+export function raceRequiresPassword(raceId) {
+  return !PASSWORDLESS_RACE_IDS.has(String(raceId || '').trim());
+}
+
 export async function getContext(raceId) {
   const auth = getGoogleAuthClient();
   const sheets = google.sheets({ version: 'v4', auth });
