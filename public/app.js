@@ -168,7 +168,9 @@ function renderCheckIn(person) {
       <div class="checkin-title">RACE DAY CHECK-IN</div>
       <div class="checkin-divider"></div>
       <div class="checkin-name">${esc(fullName(person))}</div>
+      <div class="checkin-bib-label">Bib:</div>
       <div class="checkin-bib">${esc(person.bib || '—')}</div>
+      <div class="checkin-shirt-size">Shirt Size: ${esc(person.shirtSize || '—')}</div>
       <div class="checkin-meta">Heat ${esc(heat || 'TBD')} · ${esc(division)}</div>
       <div class="checkin-divider"></div>
       ${person.checkedIn ? `
