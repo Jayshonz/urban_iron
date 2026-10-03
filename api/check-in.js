@@ -7,7 +7,7 @@ import {
   setCheckedIn,
 } from './check-in-data.js';
 import { getContext, getLookupRows, mapParticipant, norm } from './data.js';
-import { verifyRaceSession } from './session.js';
+import { safeEqual, verifyRaceSession } from './session.js';
 
 function sameParticipant(person, input) {
   return norm(person.bib) === norm(input.bib)
@@ -19,9 +19,12 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   try {
-    const { raceId, accessToken, first, last, bib } = req.body || {};
+    const { raceId, accessToken, first, last, bib, pin } = req.body || {};
     if (!raceId || !accessToken || !first || !last || !bib) {
       return res.status(400).json({ error: 'Missing participant information' });
+    }
+    if (raceId === 'la-2026-10-04' && !safeEqual(pin, '104')) {
+      return res.status(401).json({ error: 'Invalid team PIN' });
     }
 
     const context = await getContext(raceId);
