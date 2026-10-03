@@ -50,6 +50,7 @@ export async function getCheckInData(sheets, spreadsheetId) {
     name: firstHeaderIndex(headers, ['name', 'participant', 'participant name']),
     bib: firstHeaderIndex(headers, ['bib', 'bib #', 'bib number', 'bib#']),
     checked: firstHeaderIndex(headers, ['checked in', 'check in', 'check-in', 'checked-in', 'checkin']),
+    portal: firstHeaderIndex(headers, ['portal check-in', 'portal checkin']),
   };
 
   if (indexes.checked < 0) throw new Error('Check-in Morning needs a Checked In / Check In column');
@@ -85,7 +86,8 @@ export function checkedInFromMatch(checkInData, match) {
 }
 
 export async function setCheckedIn(sheets, spreadsheetId, checkInData, match) {
-  const cell = `'Check-in Morning'!${columnLetter(checkInData.indexes.checked)}${match.sheetRow}`;
+  const targetIndex = checkInData.indexes.portal >= 0 ? checkInData.indexes.portal : checkInData.indexes.checked;
+  const cell = `'Check-in Morning'!${columnLetter(targetIndex)}${match.sheetRow}`;
   await sheets.spreadsheets.values.update({
     spreadsheetId,
     range: cell,
