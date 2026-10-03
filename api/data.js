@@ -44,7 +44,7 @@ export async function getContext(raceId) {
 export async function getLookupRows(sheets, spreadsheetId) {
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: "'App Lookup'!A2:G",
+    range: "'App Lookup'!A2:H",
   });
   return response.data.values || [];
 }
@@ -57,5 +57,6 @@ export function mapParticipant(row) {
     heatNumber: row[4] || '',
     heatName: row[5] || '',
     start: row[6] || '',
+    shirtSize: row[7] || '',
   };
 }
