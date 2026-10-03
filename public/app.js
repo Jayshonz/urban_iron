@@ -34,7 +34,7 @@ async function load() {
   }
 }
 
-function choose(race) {
+async function choose(race) {
   selected = race;
   accessToken = null;
   currentPerson = null;
@@ -43,12 +43,20 @@ function choose(race) {
   $('status').hidden = true;
   $('raceFlow').hidden = false;
   $('raceTitle').textContent = `${race.city} · ${race.date}`;
-  $('gate').hidden = false;
-  $('searchPanel').hidden = true;
   $('password').value = '';
   $('query').value = '';
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
+
+  if (race.requiresPassword === false) {
+    $('gate').hidden = true;
+    $('searchPanel').hidden = true;
+    await unlockPasswordlessRace();
+    return;
+  }
+
+  $('gate').hidden = false;
+  $('searchPanel').hidden = true;
   $('password').focus();
 }
 
@@ -78,6 +86,20 @@ async function unlock() {
     $('query').focus();
   } catch (error) {
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
+  }
+}
+
+async function unlockPasswordlessRace() {
+  const result = $('result');
+  result.textContent = 'Opening race…';
+  try {
+    const data = await api('/api/unlock', { raceId: selected.id });
+    accessToken = data.accessToken;
+    result.innerHTML = '';
+    $('searchPanel').hidden = false;
+    $('query').focus();
+  } catch (error) {
+    result.innerHTML = `<div class="error">${esc(error.message)}</div>`;
   }
 }
 
@@ -267,6 +289,14 @@ async function showHeat(person) {
 function resetGate(message) {
   accessToken = null;
   $('searchPanel').hidden = true;
+
+  if (selected && selected.requiresPassword === false) {
+    $('gate').hidden = true;
+    $('result').innerHTML = `<div class="error">${esc(message)}</div>`;
+    unlockPasswordlessRace();
+    return;
+  }
+
   $('gate').hidden = false;
   $('gateMessage').innerHTML = `<div class="error">${esc(message)}</div>`;
   $('password').focus();

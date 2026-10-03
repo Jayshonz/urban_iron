@@ -1,4 +1,4 @@
-import { getContext } from './data.js';
+import { getContext, raceRequiresPassword } from './data.js';
 import { createRaceSession, safeEqual } from './session.js';
 
 export default async function handler(req, res) {
@@ -6,11 +6,14 @@ export default async function handler(req, res) {
 
   try {
     const { raceId, password } = req.body || {};
-    if (!raceId || !password) return res.status(400).json({ error: 'Enter the race password' });
+    if (!raceId) return res.status(400).json({ error: 'Missing race' });
 
     const context = await getContext(raceId);
     if (context.error) return res.status(context.error.status).json({ error: context.error.message });
-    if (!safeEqual(password, context.password)) return res.status(401).json({ error: 'Invalid password' });
+    if (raceRequiresPassword(raceId)) {
+      if (!password) return res.status(400).json({ error: 'Enter the race password' });
+      if (!safeEqual(password, context.password)) return res.status(401).json({ error: 'Invalid password' });
+    }
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ accessToken: createRaceSession(raceId, context.password) });
