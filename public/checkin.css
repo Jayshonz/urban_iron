@@ -6,6 +6,8 @@
 .checkin-title{font-size:18px;font-weight:800;letter-spacing:5px;color:#2f3746}
 .checkin-divider{width:100%;height:1px;background:#dedede;margin:18px 0 24px}
 .checkin-name{font-size:20px;font-weight:800;margin:0 0 8px;text-transform:none}
+.checkin-bib-label{font-size:18px;font-weight:800;letter-spacing:.4px;margin:2px 0 6px}
+.checkin-shirt-size{font-size:18px;font-weight:700;color:#303747;margin:-2px 0 12px}
 .checkin-bib{font-size:clamp(145px,34vw,245px);font-weight:900;letter-spacing:-10px;line-height:.88;margin:4px 0 14px}
 .checkin-meta{font-size:18px;font-weight:500;color:#303747}
 .checkin-team-icon{width:50px;height:38px;margin:2px auto 10px;color:#313947}
