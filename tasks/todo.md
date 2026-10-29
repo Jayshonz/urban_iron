@@ -1,16 +1,14 @@
-# Current task: Athlete offer placeholders
+# Current task: Member login status copy
 
 ## Plan
 
-- [x] Inspect the current Offers tab and available partner assets.
-- [x] Add clearly labeled Create and Storm sample offers.
-- [x] Refine compact desktop and mobile layouts.
-- [x] Verify syntax, links, keyboard focus, console output, and responsive behavior.
-- [x] Prepare the deployment and production verification checklist.
+- [x] Update the reserved member-login label from “Coming later” to “Coming soon.”
+- [x] Verify the old phrase is removed and the page remains valid.
+- [x] Prepare deployment and production verification.
 
 ## Results
 
-Added two explicitly labeled sample offers with supplied partner logos, 50%-off examples, inactive sample codes, and safe external links. JavaScript/API syntax, JSON, diff, link attributes, console output, and 360/390/430/1280px viewport checks pass with two offer cards and no document-level horizontal overflow.
+Updated the member-login status copy to “Coming soon.” JavaScript/API syntax, JSON, and diff checks pass, and the previous phrase no longer appears in public files.
 
 ## Follow-up queued
 
