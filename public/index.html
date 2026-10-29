@@ -6,18 +6,42 @@
   <title>Urban Iron Athlete Portal</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <meta name="theme-color" content="#000000">
-  <link rel="stylesheet" href="/styles.css">\n  <link rel="stylesheet" href="/checkin.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/checkin.css">
 </head>
 <body>
+<header class="portal-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="Urban Iron athlete portal home">
+      <img src="/urban-iron-logo.png" alt="Urban Iron">
+    </a>
+    <div class="future-login" aria-disabled="true">
+      <span>Member login</span>
+      <small>Coming later</small>
+    </div>
+  </div>
+</header>
 <main>
-  <header><b>URBAN<br>IRON</b><span>ATHLETE PORTAL</span></header>
-  <section id="app">
-    <p class="eyebrow">I'M AN ATHLETE</p>
-    <h1>FIND YOUR<br>HEAT.</h1>
-    <p id="status">Loading live races…</p>
-    <div id="races"></div>
+  <section id="home" class="home-race-hero" aria-labelledby="homeTitle">
+    <img class="home-hero-image" src="https://photos.urbaniron.co/urban-iron-home-hero.jpg" alt="Urban Iron athletes gathering beneath the event banner" fetchpriority="high">
+    <span class="home-hero-shade" aria-hidden="true"></span>
+    <div class="home-race-selector">
+      <p class="eyebrow">ATHLETE PORTAL</p>
+      <h1 id="homeTitle">Find your race</h1>
+      <p>Choose your event for heat lookup, race-day information, prep guides, and partner offers.</p>
+      <form id="raceForm" class="home-race-form">
+        <label class="sr-only" for="raceSelect">Select race</label>
+        <select id="raceSelect" disabled>
+          <option value="">Loading live races…</option>
+        </select>
+        <button id="openRace" type="submit" disabled>Open athlete portal</button>
+      </form>
+      <p id="status" class="home-status" role="status">Loading live races…</p>
+    </div>
+  </section>
 
-    <div id="raceFlow" hidden>
+  <section id="raceFlow" class="race-shell" hidden>
+    <div class="race-shell-inner">
       <button id="back" class="text-button">← Change race</button>
       <h2 id="raceTitle"></h2>
 
