@@ -2,6 +2,7 @@ let selected = null;
 let accessToken = null;
 let currentPerson = null;
 let checkInEnabled = false;
+let availableRaces = [];
 const $ = (id) => document.getElementById(id);
 
 async function api(path, body) {
@@ -20,33 +21,54 @@ async function load() {
     const response = await fetch('/api/races');
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Race list unavailable');
-    $('status').textContent = data.races.length ? 'Select your city.' : 'No races are currently published.';
-    $('races').innerHTML = '';
+    availableRaces = data.races;
+    const select = $('raceSelect');
+    select.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = data.races.length ? 'Select race' : 'No races are currently published';
+    select.appendChild(placeholder);
     data.races.forEach((race) => {
-      const button = document.createElement('button');
-      button.className = 'race';
-      button.innerHTML = `<strong>${esc(race.city)}</strong><span>${esc(race.date)}</span>`;
-      button.onclick = () => choose(race);
-      $('races').appendChild(button);
+      const option = document.createElement('option');
+      option.value = race.id;
+      option.textContent = `${race.city} · ${race.date}`;
+      select.appendChild(option);
     });
+    select.disabled = !data.races.length;
+    $('openRace').disabled = true;
+    $('status').textContent = data.races.length ? 'Select a race to continue.' : 'No races are currently published.';
   } catch {
+    availableRaces = [];
+    $('raceSelect').innerHTML = '<option value="">Race list unavailable</option>';
+    $('raceSelect').disabled = true;
+    $('openRace').disabled = true;
     $('status').textContent = 'Race list unavailable.';
   }
 }
+
+$('raceSelect').addEventListener('change', () => {
+  $('openRace').disabled = !$('raceSelect').value;
+});
+
+$('raceForm').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const race = availableRaces.find((item) => item.id === $('raceSelect').value);
+  if (race) choose(race);
+});
 
 async function choose(race) {
   selected = race;
   accessToken = null;
   currentPerson = null;
   checkInEnabled = Boolean(race.checkInEnabled);
-  $('races').hidden = true;
-  $('status').hidden = true;
+  $('home').hidden = true;
   $('raceFlow').hidden = false;
   $('raceTitle').textContent = `${race.city} · ${race.date}`;
   $('password').value = '';
   $('query').value = '';
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
+  window.scrollTo({ top: 0, behavior: 'auto' });
 
   if (race.requiresPassword === false || race.id === 'la-2026-10-04') {
     $('gate').hidden = true;
@@ -65,8 +87,10 @@ $('back').onclick = () => {
   accessToken = null;
   currentPerson = null;
   $('raceFlow').hidden = true;
-  $('races').hidden = false;
-  $('status').hidden = false;
+  $('home').hidden = false;
+  $('raceSelect').value = '';
+  $('openRace').disabled = true;
+  window.scrollTo({ top: 0, behavior: 'auto' });
 };
 
 $('unlock').onclick = unlock;
