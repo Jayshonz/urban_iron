@@ -56,6 +56,35 @@ $('raceForm').addEventListener('submit', (event) => {
   if (race) choose(race);
 });
 
+const workspaceTabs = Array.from(document.querySelectorAll('[data-tab]'));
+
+function activateTab(tabName, { focus = false } = {}) {
+  workspaceTabs.forEach((tab) => {
+    const active = tab.dataset.tab === tabName;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-selected', String(active));
+    tab.tabIndex = active ? 0 : -1;
+    if (active && focus) tab.focus();
+  });
+  document.querySelectorAll('[data-panel]').forEach((panel) => {
+    panel.hidden = panel.dataset.panel !== tabName;
+  });
+}
+
+workspaceTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => activateTab(tab.dataset.tab));
+  tab.addEventListener('keydown', (event) => {
+    let nextIndex = null;
+    if (event.key === 'ArrowRight') nextIndex = (index + 1) % workspaceTabs.length;
+    if (event.key === 'ArrowLeft') nextIndex = (index - 1 + workspaceTabs.length) % workspaceTabs.length;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = workspaceTabs.length - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    activateTab(workspaceTabs[nextIndex].dataset.tab, { focus: true });
+  });
+});
+
 async function choose(race) {
   selected = race;
   accessToken = null;
@@ -68,17 +97,17 @@ async function choose(race) {
   $('query').value = '';
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
+  $('workspace').hidden = true;
+  activateTab('heat');
   window.scrollTo({ top: 0, behavior: 'auto' });
 
   if (race.requiresPassword === false || race.id === 'la-2026-10-04') {
     $('gate').hidden = true;
-    $('searchPanel').hidden = true;
     await unlockPasswordlessRace();
     return;
   }
 
   $('gate').hidden = false;
-  $('searchPanel').hidden = true;
   $('password').focus();
 }
 
@@ -87,6 +116,8 @@ $('back').onclick = () => {
   accessToken = null;
   currentPerson = null;
   $('raceFlow').hidden = true;
+  $('workspace').hidden = true;
+  activateTab('heat');
   $('home').hidden = false;
   $('raceSelect').value = '';
   $('openRace').disabled = true;
@@ -106,7 +137,8 @@ async function unlock() {
     accessToken = data.accessToken;
     $('password').value = '';
     $('gate').hidden = true;
-    $('searchPanel').hidden = false;
+    $('workspace').hidden = false;
+    activateTab('heat');
     $('query').focus();
   } catch (error) {
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
@@ -120,9 +152,12 @@ async function unlockPasswordlessRace() {
     const data = await api('/api/unlock', { raceId: selected.id });
     accessToken = data.accessToken;
     result.innerHTML = '';
-    $('searchPanel').hidden = false;
+    $('workspace').hidden = false;
+    activateTab('heat');
     $('query').focus();
   } catch (error) {
+    $('workspace').hidden = false;
+    activateTab('heat');
     result.innerHTML = `<div class="error">${esc(error.message)}</div>`;
   }
 }
@@ -312,10 +347,12 @@ async function showHeat(person) {
 
 function resetGate(message) {
   accessToken = null;
-  $('searchPanel').hidden = true;
+  $('workspace').hidden = true;
 
   if (selected && selected.requiresPassword === false) {
     $('gate').hidden = true;
+    $('workspace').hidden = false;
+    activateTab('heat');
     $('result').innerHTML = `<div class="error">${esc(message)}</div>`;
     unlockPasswordlessRace();
     return;
