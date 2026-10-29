@@ -1,14 +1,18 @@
-# Current task: Athlete portal home
+# Current task: Athlete race workspace
 
 ## Plan
 
-- [x] Inspect the athlete portal and the photo portal's race-directory pattern.
-- [x] Build the race-selector home page and future member-login slot.
-- [x] Preserve the existing race access, lookup, and check-in flow.
-- [x] Refine responsive and keyboard behavior.
-- [x] Run syntax, regression, and viewport checks.
-- [x] Review the diff and prepare deployment.
+- [x] Inspect the existing post-access athlete flow.
+- [x] Add the accessible race workspace tab shell.
+- [x] Keep Heat Lookup and check-in behavior intact inside the first tab.
+- [x] Add honest placeholders for routes, prep guides, and offers.
+- [x] Verify mobile, desktop, keyboard, and regression behavior.
+- [x] Prepare the deployment and production verification checklist.
 
 ## Results
 
-Built a dedicated photo-portal-style race selector with a reserved future member-login position. The existing password, lookup, heat roster, share card, and check-in flows remain behind race selection. JavaScript/API syntax, JSON, diff, keyboard flow, console, and 360/390/430/1280px viewport checks pass with no horizontal overflow.
+Added an authenticated, race-scoped workspace with Heat Lookup, Route & Workouts, Prep Guides, and Offers. The existing heat result and check-in flow remain functional inside Heat Lookup. Password and passwordless entry, tab click and arrow-key navigation, preserved search state, console output, and 360/390/430/1280px layouts pass with no document-level horizontal overflow.
+
+## Follow-up queued
+
+- Run a focused dependency-maintenance phase for the existing `@vercel/oidc`, Google API, and transitive dependency advisories. Upgrade with compatibility tests rather than forcing breaking versions into a UX release.
