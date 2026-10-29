@@ -52,11 +52,49 @@
         <div id="gateMessage"></div>
       </div>
 
-      <div id="searchPanel" hidden>
-        <p class="step-label">SEARCH ATHLETES</p>
-        <input id="query" autocomplete="off" placeholder="First name, last name, or email">
-        <button id="find">Find my heat</button>
-        <div id="result"></div>
+      <div id="workspace" class="race-workspace" hidden>
+        <nav class="workspace-tabs" role="tablist" aria-label="Race resources">
+          <button id="heatTab" class="workspace-tab active" type="button" role="tab" aria-selected="true" aria-controls="heatPanel" data-tab="heat">Heat Lookup</button>
+          <button id="routeTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="routePanel" data-tab="route" tabindex="-1">Route &amp; Workouts</button>
+          <button id="prepTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="prepPanel" data-tab="prep" tabindex="-1">Prep Guides</button>
+          <button id="offersTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="offersPanel" data-tab="offers" tabindex="-1">Offers</button>
+        </nav>
+
+        <section id="heatPanel" class="workspace-panel" role="tabpanel" aria-labelledby="heatTab" data-panel="heat">
+          <div id="searchPanel">
+            <p class="step-label">SEARCH ATHLETES</p>
+            <input id="query" autocomplete="off" placeholder="First name, last name, or email">
+            <button id="find">Find my heat</button>
+            <div id="result"></div>
+          </div>
+        </section>
+
+        <section id="routePanel" class="workspace-panel" role="tabpanel" aria-labelledby="routeTab" data-panel="route" hidden>
+          <p class="step-label">RACE DAY</p>
+          <h3>Route &amp; workouts</h3>
+          <div class="workspace-placeholder">
+            <strong>Race details are coming soon.</strong>
+            <p>This section will hold the running route, workout order, movement standards, and race-day notes for this event.</p>
+          </div>
+        </section>
+
+        <section id="prepPanel" class="workspace-panel" role="tabpanel" aria-labelledby="prepTab" data-panel="prep" hidden>
+          <p class="step-label">BE READY</p>
+          <h3>Prep guides</h3>
+          <div class="workspace-placeholder">
+            <strong>Preparation resources are coming soon.</strong>
+            <p>Event-specific guides, useful links, PDFs, packing notes, and training information will live here.</p>
+          </div>
+        </section>
+
+        <section id="offersPanel" class="workspace-panel" role="tabpanel" aria-labelledby="offersTab" data-panel="offers" hidden>
+          <p class="step-label">PARTNER PERKS</p>
+          <h3>Offers</h3>
+          <div class="workspace-placeholder">
+            <strong>Partner offers are coming soon.</strong>
+            <p>Discount codes, descriptions, and direct links from Urban Iron partners will appear here for this race.</p>
+          </div>
+        </section>
       </div>
     </div>
   </section>
