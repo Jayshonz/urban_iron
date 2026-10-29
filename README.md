@@ -1,15 +1,15 @@
-# Urban Iron Participant Portal — OIDC v4
+# Urban Iron Athlete Portal — OIDC v4
 
 Vercel OIDC + Google Cloud Workload Identity Federation, with Google Sheets read-only access.
 
-## v4 participant experience
+## v4 athlete experience
 
-- Race password is requested once after a participant selects a race.
+- Race password is requested once after an athlete selects a race.
 - Successful password entry creates a short-lived, race-specific session token; the password field disappears for the session.
-- Participant search supports partial first name, partial last name, partial email, full name, and light typo tolerance for names. Email addresses are never returned to the browser.
+- Athlete search supports partial first name, partial last name, partial email, full name, and light typo tolerance for names. Email addresses are never returned to the browser.
 - Multiple matches are shown as a selectable list.
-- Participant detail labels are explicit: Heat, Bib Number, Estimated Start Time.
-- Participants can open their heat roster and see everyone assigned to that heat without exposing emails.
+- Athlete detail labels are explicit: Heat, Bib Number, Estimated Start Time.
+- Athletes can open their heat roster and see everyone assigned to that heat without exposing emails.
 
 ## Required Vercel environment variables
 
