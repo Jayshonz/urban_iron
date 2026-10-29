@@ -4,7 +4,9 @@
   "version": "0.2.1",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "test": "node --test",
+    "check": "node --check public/app.js && node --check public/admin.js && node --check api/admin-auth.js && node --check api/admin-session.js && node --check api/admin-race-content.js && node --check api/race-content.js && node --check api/race-content-store.js && node --check api/race-registry.js"
   },
   "dependencies": {
     "@vercel/oidc": "^3.0.2",

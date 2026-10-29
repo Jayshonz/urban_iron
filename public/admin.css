@@ -1,0 +1,37 @@
+.admin-body{min-height:100svh;background:#e4e2dd}
+.admin-public-link{display:inline-flex;min-height:44px;align-items:center;color:#e4e2dd;font-size:11px;font-weight:800;letter-spacing:.06em;text-underline-offset:4px;text-transform:uppercase}
+.admin-main{width:min(calc(100% - 32px),860px);margin:0 auto;padding:48px 0 88px}
+.admin-heading{padding:0 0 30px;border-bottom:1px solid #aaa8a2}
+.admin-heading .eyebrow{margin:0 0 10px}
+.admin-heading h1{margin:0 0 12px;font-size:clamp(44px,8vw,72px);line-height:.9;letter-spacing:-.04em;overflow-wrap:anywhere;text-transform:uppercase}
+.admin-heading>p:last-child{max-width:650px;margin:0;color:#4f4f4c;line-height:1.5}
+.admin-panel{padding:32px 0}
+.admin-login{max-width:480px}
+.admin-panel h2{margin:4px 0 20px;font-size:32px;line-height:1;text-transform:uppercase}
+.admin-panel-heading{display:flex;align-items:start;justify-content:space-between;gap:20px}
+.admin-panel label{display:block;margin:16px 0 7px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.admin-panel label span{color:#686762;font-size:10px}
+.admin-panel input,.admin-panel select,.admin-panel textarea{width:100%;border:1px solid #898782;background:rgba(255,255,255,.68);border-radius:0;color:#101010;font:inherit}
+.admin-panel input,.admin-panel select{min-height:50px;padding:12px 14px}
+.admin-panel textarea{display:block;padding:14px;line-height:1.5;resize:vertical}
+.admin-panel input:focus-visible,.admin-panel select:focus-visible,.admin-panel textarea:focus-visible,.admin-panel button:focus-visible,.admin-public-link:focus-visible{outline:3px solid #4e71ff;outline-offset:2px}
+.admin-panel button{min-height:48px;border:1px solid #101010;background:#101010;color:#fff;font-weight:800;text-transform:uppercase;cursor:pointer}
+.admin-panel button:hover:not(:disabled){background:#d8ff3e;color:#101010}
+.admin-panel button:disabled{opacity:.5;cursor:not-allowed}
+.admin-login button{width:100%;margin-top:14px}
+.admin-link-button{min-height:42px!important;padding:8px 12px!important;background:transparent!important;color:#101010!important;font-size:11px}
+.admin-link-button:hover{background:#fff!important}
+.admin-race-field{padding-bottom:24px;border-bottom:1px solid #aaa8a2}
+.admin-race-field select{font-weight:800}
+.admin-panel fieldset{min-width:0;padding:0;border:0}
+.admin-content-section{padding:28px 0;border-bottom:1px solid #aaa8a2}
+.admin-section-heading{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start}
+.admin-section-heading>span{display:grid;width:32px;height:32px;place-items:center;background:#101010;color:#fff;font-size:11px;font-weight:800}
+.admin-section-heading h3{margin:1px 0 4px;font-size:22px;line-height:1;text-transform:uppercase}
+.admin-section-heading p{margin:0;color:#5d5c58;font-size:13px;line-height:1.4}
+.admin-save-bar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:24px}
+.admin-save-bar button{flex:0 0 auto;padding:12px 18px}
+.admin-message{min-height:20px;color:#5d5c58;font-size:13px;line-height:1.4}
+.admin-message.error-text{color:#a12020;font-weight:700}
+.admin-message.success-text{color:#176429;font-weight:700}
+@media(max-width:620px){.admin-main{width:min(calc(100% - 24px),860px);padding-top:32px}.admin-heading h1{font-size:40px}.admin-panel-heading{align-items:center}.admin-save-bar{align-items:stretch;flex-direction:column}.admin-save-bar button{width:100%}.admin-content-section{padding:24px 0}}
