@@ -21,7 +21,7 @@ main{max-width:none;margin:0;padding:0}
 .brand img{display:block;width:68px;height:auto}
 .header-actions{display:flex;align-items:center;gap:18px}
 .platform-nav{display:flex;align-items:center;gap:10px}
-.platform-nav a{display:inline-flex;min-height:44px;align-items:center;padding:0 6px;color:#e4e2dd;font-size:11px;font-weight:700;letter-spacing:.04em;text-underline-offset:4px;text-transform:uppercase}
+.platform-nav a{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;padding:0 6px;color:#e4e2dd;font-size:11px;font-weight:700;letter-spacing:.04em;text-underline-offset:4px;text-transform:uppercase}
 .future-login{display:grid;justify-items:end;gap:1px;color:#e4e2dd;cursor:default}
 .future-login span{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
 .future-login small{color:#aaa;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
