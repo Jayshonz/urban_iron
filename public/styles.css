@@ -10,3 +10,38 @@
 .share-create-logo{width:190px;max-height:72px;object-fit:contain;display:block;margin:4px auto 24px}
 .checkerboard{position:absolute;left:0;right:0;bottom:0;height:54px;background-color:#fff;background-image:linear-gradient(45deg,#000 25%,transparent 25%,transparent 75%,#000 75%,#000),linear-gradient(45deg,#000 25%,transparent 25%,transparent 75%,#000 75%,#000);background-size:54px 54px;background-position:0 0,27px 27px}
 @media(max-width:600px){.share-card{max-width:360px;border-radius:24px}.share-card-inner{min-height:560px;border-radius:19px;padding:42px 20px 64px}.share-logo{width:126px;height:80px;margin-bottom:45px}.share-heat-label{font-size:29px;letter-spacing:12px;padding-left:12px}.share-heat-number{font-size:210px}.share-presented{margin-top:32px}.share-create-logo{width:170px;max-height:64px}.checkerboard{height:48px;background-size:48px 48px;background-position:0 0,24px 24px}}
+
+/* Athlete portal entry point — mirrors the photo portal race selector. */
+[hidden]{display:none!important}
+body{background:#e4e2dd;color:#000}
+main{max-width:none;margin:0;padding:0}
+.portal-header{position:relative;z-index:20;display:block;min-height:76px;padding:0;color:#e4e2dd;background:#000;border:0;border-bottom:1px solid #1c1c1c}
+.header-inner{display:flex;width:100%;max-width:1180px;min-height:76px;align-items:center;justify-content:space-between;gap:16px;margin:0 auto;padding:0 16px}
+.brand{display:inline-flex;min-width:44px;min-height:44px;align-items:center}
+.brand img{display:block;width:68px;height:auto}
+.future-login{display:grid;justify-items:end;gap:1px;color:#e4e2dd;cursor:default}
+.future-login span{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.future-login small{color:#aaa;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.home-race-hero{position:relative;display:grid;min-height:calc(100svh - 76px);place-items:center;overflow:hidden;padding:0;color:#e4e2dd;background:#000}
+.home-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 54%}
+.home-hero-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.58))}
+.home-race-selector{position:relative;z-index:1;width:min(100% - 32px,560px);padding:24px;text-align:center;text-shadow:0 2px 18px rgba(0,0,0,.92)}
+.home-race-selector .eyebrow{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.home-race-selector h1{margin:0 0 12px;font-size:clamp(48px,11vw,82px);line-height:.88;letter-spacing:-.03em;text-transform:uppercase}
+.home-race-selector>p:not(.eyebrow){max-width:480px;margin:0 auto 16px;line-height:1.5}
+.home-race-form{display:grid;width:min(100%,420px);gap:12px;margin:24px auto 0}
+.home-race-form select,.home-race-form button{width:100%;min-height:52px;padding:13px 16px;color:#e4e2dd;background:rgba(0,0,0,.08);border:1px solid rgba(228,226,221,.82);border-radius:0;font-weight:700;text-transform:uppercase;backdrop-filter:blur(2px)}
+.home-race-form select{padding-right:44px;cursor:pointer}
+.home-race-form select option{color:#000;background:#e4e2dd;text-transform:none}
+.home-race-form button:not(:disabled){cursor:pointer}
+.home-race-form button:not(:disabled):hover,.home-race-form select:hover{color:#fafafa;background:rgba(0,0,0,.42);border-color:#fafafa}
+.home-race-form select:focus-visible,.home-race-form button:focus-visible,.brand:focus-visible,.text-button:focus-visible{outline:3px solid #d8ff3e;outline-offset:3px}
+.home-race-form button:disabled{color:rgba(228,226,221,.58);background:rgba(0,0,0,.2);border-color:rgba(228,226,221,.42);cursor:not-allowed}
+.home-status{min-height:24px;margin-top:12px!important;color:#e4e2dd;font-size:13px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.race-shell{max-width:none;padding:0}
+.race-shell-inner{width:100%;max-width:720px;min-height:calc(100svh - 76px);margin:0 auto;padding:32px 16px 72px}
+.race-shell h2{margin:28px 0 22px;font-size:clamp(30px,6vw,52px);line-height:.95;text-transform:uppercase}
+#raceFlow{max-width:none}
+@media(min-width:768px){.header-inner,.race-shell-inner{padding-inline:24px}}
+@media(max-width:520px){.home-race-selector{padding-inline:0}.home-race-selector h1{font-size:clamp(44px,15vw,64px)}.future-login span{font-size:11px}.future-login small{font-size:9px}}
