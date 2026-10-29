@@ -1,4 +1,15 @@
-# Current task: Member login status copy
+# Current task: Portal cross-links
+
+## Plan
+
+- [x] Add compact Home and Photos links to the athlete portal header.
+- [x] Preserve the athlete-home logo and future member-login slot.
+- [ ] Validate mobile/desktop layout and link destinations.
+- [ ] Deploy and verify both portals in production.
+
+---
+
+# Previous task: Member login status copy
 
 ## Plan
 
