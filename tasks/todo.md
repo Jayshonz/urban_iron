@@ -1,17 +1,16 @@
-# Current task: Athlete race workspace
+# Current task: Athlete offer placeholders
 
 ## Plan
 
-- [x] Inspect the existing post-access athlete flow.
-- [x] Add the accessible race workspace tab shell.
-- [x] Keep Heat Lookup and check-in behavior intact inside the first tab.
-- [x] Add honest placeholders for routes, prep guides, and offers.
-- [x] Verify mobile, desktop, keyboard, and regression behavior.
+- [x] Inspect the current Offers tab and available partner assets.
+- [x] Add clearly labeled Create and Storm sample offers.
+- [x] Refine compact desktop and mobile layouts.
+- [x] Verify syntax, links, keyboard focus, console output, and responsive behavior.
 - [x] Prepare the deployment and production verification checklist.
 
 ## Results
 
-Added an authenticated, race-scoped workspace with Heat Lookup, Route & Workouts, Prep Guides, and Offers. The existing heat result and check-in flow remain functional inside Heat Lookup. Password and passwordless entry, tab click and arrow-key navigation, preserved search state, console output, and 360/390/430/1280px layouts pass with no document-level horizontal overflow.
+Added two explicitly labeled sample offers with supplied partner logos, 50%-off examples, inactive sample codes, and safe external links. JavaScript/API syntax, JSON, diff, link attributes, console output, and 360/390/430/1280px viewport checks pass with two offer cards and no document-level horizontal overflow.
 
 ## Follow-up queued
 
