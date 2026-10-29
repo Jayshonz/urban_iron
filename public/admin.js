@@ -108,9 +108,9 @@ $('adminLoginForm').addEventListener('submit', async (event) => {
   $('adminLoginButton').disabled = true;
   setMessage($('loginMessage'), 'Signing in…');
   try {
-    await request('/api/admin-login', {
+    await request('/api/admin-session', {
       method: 'POST',
-      body: JSON.stringify({ password: $('adminPassword').value }),
+      body: JSON.stringify({ action: 'login', password: $('adminPassword').value }),
     });
     $('adminPassword').value = '';
     await initializeEditor();
@@ -154,7 +154,10 @@ $('contentForm').addEventListener('submit', async (event) => {
 
 $('adminLogout').addEventListener('click', async () => {
   try {
-    await request('/api/admin-logout', { method: 'POST' });
+    await request('/api/admin-session', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'logout' }),
+    });
   } finally {
     showLogin('You are logged out.');
   }
