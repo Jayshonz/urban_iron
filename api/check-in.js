@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   try {
     const { raceId, accessToken, first, last, bib } = req.body || {};
     if (!raceId || !accessToken || !first || !bib) {
-      return res.status(400).json({ error: 'Missing participant information' });
+      return res.status(400).json({ error: 'Missing athlete information' });
     }
     const context = await getContext(raceId);
     if (context.error) return res.status(context.error.status).json({ error: context.error.message });
@@ -39,11 +39,11 @@ export default async function handler(req, res) {
     const participant = lookupRows.map(mapParticipant).find((person) =>
       sameParticipant(person, { first, last, bib }),
     );
-    if (!participant) return res.status(404).json({ error: 'Participant not found' });
+    if (!participant) return res.status(404).json({ error: 'Athlete not found' });
 
     const checkInData = await getCheckInData(context.sheets, context.spreadsheetId);
     const match = findCheckInParticipant(checkInData, participant);
-    if (!match) return res.status(404).json({ error: 'Participant not found on Check-in Morning' });
+    if (!match) return res.status(404).json({ error: 'Athlete not found on Check-in Morning' });
 
     if (!checkedInFromMatch(checkInData, match)) {
       await setCheckedIn(context.sheets, context.spreadsheetId, checkInData, match);

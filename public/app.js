@@ -272,7 +272,7 @@ async function showHeat(person) {
     });
     roster.innerHTML = `
       <div class="roster">
-        <p class="roster-title">${esc(person.heatName)} · ${data.participants.length} participants</p>
+        <p class="roster-title">${esc(person.heatName)} · ${data.participants.length} athletes</p>
         ${data.participants.map((p) => `
           <div class="roster-person ${samePerson(p, person) ? 'you' : ''}">
             <span>${esc(fullName(p))}${samePerson(p, person) ? ' · YOU' : ''}</span>
