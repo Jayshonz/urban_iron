@@ -1,28 +1,8 @@
-import { google } from 'googleapis';
-import { getGoogleAuthClient } from './google-auth.js';
-import { raceCheckInEnabled } from './check-in-data.js';
-import { raceRequiresPassword } from './data.js';
+import { getPublishedRaces } from './race-registry.js';
 
 export default async function handler(req, res) {
   try {
-    const auth = getGoogleAuthClient();
-    const sheets = google.sheets({ version: 'v4', auth });
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.RACE_REGISTRY_SHEET_ID,
-      range: "'Race Registry'!A2:K",
-    });
-
-    const rows = response.data.values || [];
-    const races = rows
-      .filter((row) => row[4] === 'Live' && row[5] === 'Yes')
-      .map((row) => ({
-        id: row[0],
-        city: row[1],
-        date: row[2],
-        lastUpdated: row[6],
-        checkInEnabled: raceCheckInEnabled(rows, row[0]),
-        requiresPassword: raceRequiresPassword(row[0]),
-      }));
+    const races = await getPublishedRaces();
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ races });

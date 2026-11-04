@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Athlete Portal Admin · Urban Iron</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="theme-color" content="#000000">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body class="admin-body">
+  <header class="portal-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="Urban Iron athlete portal home">
+        <img src="/urban-iron-logo.png" alt="Urban Iron">
+      </a>
+      <a class="admin-public-link" href="/">View athlete portal</a>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-heading" aria-labelledby="adminTitle">
+      <p class="eyebrow">ATHLETE PORTAL ADMIN</p>
+      <h1 id="adminTitle">Race-day content</h1>
+      <p>Update the route, workouts, and important notes athletes see after unlocking a race.</p>
+    </section>
+
+    <section id="adminLogin" class="admin-panel admin-login" aria-labelledby="loginTitle">
+      <p class="step-label">STAFF ACCESS</p>
+      <h2 id="loginTitle">Sign in</h2>
+      <form id="adminLoginForm">
+        <label for="adminPassword">Admin password</label>
+        <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
+        <button id="adminLoginButton" type="submit">Open editor</button>
+      </form>
+      <div id="loginMessage" class="admin-message" role="status"></div>
+    </section>
+
+    <section id="adminEditor" class="admin-panel" aria-labelledby="editorTitle" hidden>
+      <div class="admin-panel-heading">
+        <div>
+          <p class="step-label">RACE CONTENT</p>
+          <h2 id="editorTitle">Route &amp; workouts</h2>
+        </div>
+        <button id="adminLogout" class="admin-link-button" type="button">Log out</button>
+      </div>
+
+      <form id="contentForm">
+        <div class="admin-field admin-race-field">
+          <label for="adminRace">Race</label>
+          <select id="adminRace" required>
+            <option value="">Loading races…</option>
+          </select>
+        </div>
+
+        <fieldset id="contentFields" disabled>
+          <legend class="sr-only">Race-day information</legend>
+          <div class="admin-content-section">
+            <div class="admin-section-heading">
+              <span>01</span>
+              <div>
+                <h3>Running route</h3>
+                <p>Describe the route, distance, laps, turns, or meeting point.</p>
+              </div>
+            </div>
+            <label for="routeDescription">Route details</label>
+            <textarea id="routeDescription" rows="5" maxlength="5000" placeholder="Example: The run begins outside the venue and follows…"></textarea>
+            <label for="routeUrl">Route map link <span>Optional</span></label>
+            <input id="routeUrl" type="url" inputmode="url" placeholder="https://…">
+          </div>
+
+          <div class="admin-content-section">
+            <div class="admin-section-heading">
+              <span>02</span>
+              <div>
+                <h3>Workouts</h3>
+                <p>List the workout order, movements, standards, and key instructions.</p>
+              </div>
+            </div>
+            <label for="workoutDescription">Workout details</label>
+            <textarea id="workoutDescription" rows="7" maxlength="5000" placeholder="Example: Workout 1 — Row, sandbag carry…"></textarea>
+            <label for="workoutUrl">Workout details link <span>Optional</span></label>
+            <input id="workoutUrl" type="url" inputmode="url" placeholder="https://…">
+          </div>
+
+          <div class="admin-content-section">
+            <div class="admin-section-heading">
+              <span>03</span>
+              <div>
+                <h3>Race-day notes</h3>
+                <p>Add arrival, parking, gear, weather, or venue information.</p>
+              </div>
+            </div>
+            <label for="raceDayNotes">Important notes</label>
+            <textarea id="raceDayNotes" rows="6" maxlength="8000" placeholder="Example: Arrive 45 minutes before your heat…"></textarea>
+          </div>
+        </fieldset>
+
+        <div class="admin-save-bar">
+          <div id="editorMessage" class="admin-message" role="status"></div>
+          <button id="saveContent" type="submit" disabled>Save race-day information</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>

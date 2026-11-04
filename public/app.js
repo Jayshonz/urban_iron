@@ -3,6 +3,7 @@ let accessToken = null;
 let currentPerson = null;
 let checkInEnabled = false;
 let availableRaces = [];
+let raceDayContentRaceId = '';
 const $ = (id) => document.getElementById(id);
 
 async function api(path, body) {
@@ -69,6 +70,7 @@ function activateTab(tabName, { focus = false } = {}) {
   document.querySelectorAll('[data-panel]').forEach((panel) => {
     panel.hidden = panel.dataset.panel !== tabName;
   });
+  if (tabName === 'route' && selected && accessToken) loadRaceDayContent();
 }
 
 workspaceTabs.forEach((tab, index) => {
@@ -89,6 +91,7 @@ async function choose(race) {
   selected = race;
   accessToken = null;
   currentPerson = null;
+  raceDayContentRaceId = '';
   checkInEnabled = Boolean(race.checkInEnabled);
   $('home').hidden = true;
   $('raceFlow').hidden = false;
@@ -97,6 +100,7 @@ async function choose(race) {
   $('query').value = '';
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
+  renderRaceDayPlaceholder();
   $('workspace').hidden = true;
   activateTab('heat');
   window.scrollTo({ top: 0, behavior: 'auto' });
@@ -115,6 +119,7 @@ $('back').onclick = () => {
   selected = null;
   accessToken = null;
   currentPerson = null;
+  raceDayContentRaceId = '';
   $('raceFlow').hidden = true;
   $('workspace').hidden = true;
   activateTab('heat');
@@ -139,6 +144,7 @@ async function unlock() {
     $('gate').hidden = true;
     $('workspace').hidden = false;
     activateTab('heat');
+    loadRaceDayContent();
     $('query').focus();
   } catch (error) {
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
@@ -154,6 +160,7 @@ async function unlockPasswordlessRace() {
     result.innerHTML = '';
     $('workspace').hidden = false;
     activateTab('heat');
+    loadRaceDayContent();
     $('query').focus();
   } catch (error) {
     $('workspace').hidden = false;
@@ -347,6 +354,7 @@ async function showHeat(person) {
 
 function resetGate(message) {
   accessToken = null;
+  raceDayContentRaceId = '';
   $('workspace').hidden = true;
 
   if (selected && selected.requiresPassword === false) {
@@ -361,6 +369,57 @@ function resetGate(message) {
   $('gate').hidden = false;
   $('gateMessage').innerHTML = `<div class="error">${esc(message)}</div>`;
   $('password').focus();
+}
+
+function renderRaceDayPlaceholder(message = 'Race details are coming soon.') {
+  $('raceDayContent').className = 'workspace-placeholder';
+  $('raceDayContent').innerHTML = `
+    <strong>${esc(message)}</strong>
+    <p>This section will hold the running route, workout order, movement standards, and race-day notes for this event.</p>`;
+}
+
+function raceDaySection(label, body, url, linkLabel) {
+  if (!body && !url) return '';
+  return `
+    <section class="race-day-section">
+      <p class="race-day-label">${esc(label)}</p>
+      ${body ? `<div class="race-day-copy">${esc(body).replace(/\n/g, '<br>')}</div>` : ''}
+      ${url ? `<a class="race-day-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(linkLabel)} <span aria-hidden="true">↗</span></a>` : ''}
+    </section>`;
+}
+
+function renderRaceDayContent(content) {
+  const sections = [
+    raceDaySection('Running route', content.routeDescription, content.routeUrl, 'Open route map'),
+    raceDaySection('Workouts', content.workoutDescription, content.workoutUrl, 'Open workout details'),
+    raceDaySection('Important notes', content.raceDayNotes, '', ''),
+  ].filter(Boolean);
+  if (!sections.length) {
+    renderRaceDayPlaceholder();
+    return;
+  }
+  $('raceDayContent').className = 'race-day-content';
+  $('raceDayContent').innerHTML = sections.join('');
+}
+
+async function loadRaceDayContent() {
+  if (!selected || !accessToken || raceDayContentRaceId === selected.id) return;
+  const requestedRaceId = selected.id;
+  raceDayContentRaceId = requestedRaceId;
+  $('raceDayContent').className = 'workspace-placeholder';
+  $('raceDayContent').innerHTML = '<strong>Loading race-day information…</strong>';
+  try {
+    const data = await api('/api/race-content', {
+      raceId: requestedRaceId,
+      accessToken,
+    });
+    if (!selected || selected.id !== requestedRaceId) return;
+    renderRaceDayContent(data.content || {});
+  } catch (error) {
+    raceDayContentRaceId = '';
+    if (error.message.toLowerCase().includes('session expired')) resetGate(error.message);
+    else renderRaceDayPlaceholder('Race-day information is temporarily unavailable.');
+  }
 }
 
 function fullName(person) {
