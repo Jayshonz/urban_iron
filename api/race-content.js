@@ -1,5 +1,5 @@
 import { getContext } from './data.js';
-import { getRaceContent } from './race-content-store.js';
+import { getRaceContent, publicRaceContent } from './race-content-store.js';
 import { verifyRaceSession } from './session.js';
 
 export default async function handler(req, res) {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       process.env.RACE_REGISTRY_SHEET_ID,
       raceId,
     );
-    return res.status(200).json({ content });
+    return res.status(200).json({ content: publicRaceContent(content) });
   } catch (error) {
     console.error('race content error', error);
     return res.status(500).json({ error: 'Unable to load race-day information' });

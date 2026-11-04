@@ -70,7 +70,7 @@ function activateTab(tabName, { focus = false } = {}) {
   document.querySelectorAll('[data-panel]').forEach((panel) => {
     panel.hidden = panel.dataset.panel !== tabName;
   });
-  if (tabName === 'route' && selected && accessToken) loadRaceDayContent();
+  if (tabName !== 'heat' && selected && accessToken) loadRaceDayContent();
 }
 
 workspaceTabs.forEach((tab, index) => {
@@ -101,6 +101,8 @@ async function choose(race) {
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
   renderRaceDayPlaceholder();
+  renderPrepPlaceholder();
+  renderOffersPlaceholder();
   $('workspace').hidden = true;
   activateTab('heat');
   window.scrollTo({ top: 0, behavior: 'auto' });
@@ -378,6 +380,20 @@ function renderRaceDayPlaceholder(message = 'Race details are coming soon.') {
     <p>This section will hold the running route, workout order, movement standards, and race-day notes for this event.</p>`;
 }
 
+function renderPrepPlaceholder(message = 'Preparation resources are coming soon.') {
+  $('prepContent').className = 'workspace-placeholder';
+  $('prepContent').innerHTML = `
+    <strong>${esc(message)}</strong>
+    <p>Event-specific guides, useful links, PDFs, packing notes, and training information will live here.</p>`;
+}
+
+function renderOffersPlaceholder(message = 'Partner offers are coming soon.') {
+  $('offersContent').className = 'workspace-placeholder';
+  $('offersContent').innerHTML = `
+    <strong>${esc(message)}</strong>
+    <p>Race-specific offers and coupon codes will appear here when they are available.</p>`;
+}
+
 function raceDaySection(label, body, url, linkLabel) {
   if (!body && !url) return '';
   return `
@@ -396,10 +412,48 @@ function renderRaceDayContent(content) {
   ].filter(Boolean);
   if (!sections.length) {
     renderRaceDayPlaceholder();
-    return;
+  } else {
+    $('raceDayContent').className = 'race-day-content';
+    $('raceDayContent').innerHTML = sections.join('');
   }
-  $('raceDayContent').className = 'race-day-content';
-  $('raceDayContent').innerHTML = sections.join('');
+  renderPrepGuides(content.prepGuides || []);
+  renderOffers(content.offers || []);
+}
+
+function renderPrepGuides(guides) {
+  if (!guides.length) return renderPrepPlaceholder();
+  $('prepContent').className = 'prep-guide-list';
+  $('prepContent').innerHTML = guides.map((guide) => `
+    <article class="prep-guide-card">
+      <div>
+        <p class="prep-guide-label">PREP RESOURCE</p>
+        <h4>${esc(guide.title)}</h4>
+        ${guide.description ? `<p>${esc(guide.description).replace(/\n/g, '<br>')}</p>` : ''}
+      </div>
+      <a class="prep-guide-link" href="${esc(guide.url)}" target="_blank" rel="noopener noreferrer">Open guide <span aria-hidden="true">↗</span></a>
+    </article>`).join('');
+}
+
+function renderOffers(offers) {
+  if (!offers.length) return renderOffersPlaceholder();
+  $('offersContent').className = 'offer-list';
+  $('offersContent').innerHTML = offers.map((offer) => `
+    <article class="offer-card">
+      <div class="offer-logo-wrap">
+        ${offer.logoUrl
+    ? `<img class="offer-logo" src="${esc(offer.logoUrl)}" alt="${esc(offer.partner)}">`
+    : `<span class="offer-logo-fallback" aria-hidden="true">${esc(offer.partner.slice(0, 2))}</span>`}
+      </div>
+      <div class="offer-copy">
+        <p class="offer-partner">${esc(offer.partner)}</p>
+        <h4>${esc(offer.title)}</h4>
+        ${offer.description ? `<p>${esc(offer.description).replace(/\n/g, '<br>')}</p>` : ''}
+      </div>
+      <div class="offer-action">
+        ${offer.code ? `<span class="offer-code-label">Use code</span><code class="offer-code">${esc(offer.code)}</code>` : ''}
+        <a class="offer-link" href="${esc(offer.url)}" target="_blank" rel="noopener noreferrer">View offer <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>`).join('');
 }
 
 async function loadRaceDayContent() {
@@ -408,6 +462,10 @@ async function loadRaceDayContent() {
   raceDayContentRaceId = requestedRaceId;
   $('raceDayContent').className = 'workspace-placeholder';
   $('raceDayContent').innerHTML = '<strong>Loading race-day information…</strong>';
+  $('prepContent').className = 'workspace-placeholder';
+  $('prepContent').innerHTML = '<strong>Loading prep guides…</strong>';
+  $('offersContent').className = 'workspace-placeholder';
+  $('offersContent').innerHTML = '<strong>Loading partner offers…</strong>';
   try {
     const data = await api('/api/race-content', {
       raceId: requestedRaceId,
@@ -418,7 +476,11 @@ async function loadRaceDayContent() {
   } catch (error) {
     raceDayContentRaceId = '';
     if (error.message.toLowerCase().includes('session expired')) resetGate(error.message);
-    else renderRaceDayPlaceholder('Race-day information is temporarily unavailable.');
+    else {
+      renderRaceDayPlaceholder('Race-day information is temporarily unavailable.');
+      renderPrepPlaceholder('Prep guides are temporarily unavailable.');
+      renderOffersPlaceholder('Partner offers are temporarily unavailable.');
+    }
   }
 }
 
