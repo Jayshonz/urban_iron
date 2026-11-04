@@ -1,5 +1,6 @@
 import {
   adminAuthConfigured,
+  adminPasswordConfigured,
   adminSessionCookie,
   clearAdminSessionCookie,
   createAdminSession,
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ authenticated: false });
   }
   if (action !== 'login') return res.status(400).json({ error: 'Invalid admin action' });
-  if (!adminAuthConfigured()) return res.status(503).json({ error: 'Admin access is not configured yet.' });
+  if (!adminPasswordConfigured()) return res.status(503).json({ error: 'Password fallback is not configured.' });
 
   const key = clientKey(req);
   if (rateLimited(key)) return res.status(429).json({ error: 'Too many attempts. Try again in a few minutes.' });
