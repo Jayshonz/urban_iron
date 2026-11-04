@@ -27,7 +27,7 @@ function showLogin(message = '') {
   $('adminLogin').hidden = false;
   $('loginMessage').textContent = message;
   $('adminPassword').value = '';
-  $('adminPassword').focus();
+  if (document.activeElement === document.body && $('adminPassword').offsetParent) $('adminPassword').focus();
 }
 
 function showEditor() {
