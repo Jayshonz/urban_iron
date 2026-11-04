@@ -8,28 +8,42 @@ function adminPassword() {
   return String(process.env.ATHLETE_ADMIN_PASSWORD || '');
 }
 
+function ssoSecret() {
+  return String(process.env.ADMIN_SSO_SECRET || '');
+}
+
 function signingKey() {
   return crypto
     .createHash('sha256')
-    .update(`urban-iron-athlete-admin\n${adminPassword()}`)
+    .update(`urban-iron-athlete-admin-session\n${ssoSecret().length >= 32 ? ssoSecret() : adminPassword()}`)
     .digest();
 }
 
-export function adminAuthConfigured() {
+export function adminPasswordConfigured() {
   return adminPassword().length >= 12;
 }
 
+export function adminSsoConfigured() {
+  return ssoSecret().length >= 32 && String(process.env.ADMIN_ALLOWED_EMAILS || '').trim().length > 0;
+}
+
+export function adminAuthConfigured() {
+  return adminPasswordConfigured() || adminSsoConfigured();
+}
+
 export function verifyAdminPassword(value) {
-  if (!adminAuthConfigured()) return false;
+  if (!adminPasswordConfigured()) return false;
   const candidate = String(value || '');
   if (!candidate || candidate.length > 256) return false;
   return safeEqual(candidate, adminPassword());
 }
 
-export function createAdminSession(ttlSeconds = ADMIN_SESSION_TTL_SECONDS) {
+export function createAdminSession(identity = {}, ttlSeconds = ADMIN_SESSION_TTL_SECONDS) {
   if (!adminAuthConfigured()) throw new Error('Admin authentication is not configured');
   const encoded = Buffer.from(JSON.stringify({
     scope: 'athlete-admin',
+    authMethod: identity.authMethod === 'google' ? 'google' : 'password',
+    email: identity.authMethod === 'google' ? String(identity.email || '').toLowerCase() : undefined,
     exp: Math.floor(Date.now() / 1000) + ttlSeconds,
   })).toString('base64url');
   const signature = crypto
@@ -50,8 +64,12 @@ export function verifyAdminSession(token) {
       .digest('base64url');
     if (!safeEqual(signature, expected)) return false;
     const payload = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
-    return payload.scope === 'athlete-admin'
-      && Number(payload.exp) > Math.floor(Date.now() / 1000);
+    if (payload.scope !== 'athlete-admin' || Number(payload.exp) <= Math.floor(Date.now() / 1000)) return false;
+    if (payload.authMethod === 'google') {
+      const allowed = new Set(String(process.env.ADMIN_ALLOWED_EMAILS || '').split(',').map((email) => email.trim().toLowerCase()).filter(Boolean));
+      return String(payload.email || '').endsWith('@urbaniron.co') && allowed.has(String(payload.email || '').toLowerCase());
+    }
+    return adminPasswordConfigured();
   } catch {
     return false;
   }
