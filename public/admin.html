@@ -15,7 +15,7 @@
       <a class="brand" href="/" aria-label="Urban Iron athlete portal home">
         <img src="/urban-iron-logo.png" alt="Urban Iron">
       </a>
-      <a class="admin-public-link" href="/">View athlete portal</a>
+      <nav class="admin-portal-links" aria-label="Admin portals"><a href="https://admin.urbaniron.co/admin">Photos admin</a><a class="admin-public-link" href="/">View athlete portal</a></nav>
     </div>
   </header>
 
@@ -29,11 +29,16 @@
     <section id="adminLogin" class="admin-panel admin-login" aria-labelledby="loginTitle">
       <p class="step-label">STAFF ACCESS</p>
       <h2 id="loginTitle">Sign in</h2>
+      <p>Use your approved Urban Iron Google account to access both admin portals.</p>
+      <a class="admin-sso-button" href="https://admin.urbaniron.co/api/auth/handoff/athletes">Continue with Google</a>
+      <details class="admin-password-fallback">
+        <summary>Temporary password fallback</summary>
       <form id="adminLoginForm">
         <label for="adminPassword">Admin password</label>
         <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
         <button id="adminLoginButton" type="submit">Open editor</button>
       </form>
+      </details>
       <div id="loginMessage" class="admin-message" role="status"></div>
     </section>
 
