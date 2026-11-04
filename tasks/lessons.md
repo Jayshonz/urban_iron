@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Public content promises require matching admin controls
+
+**Trigger:** Prep Guides and Offers were visible as public portal sections, but the Athlete admin only exposed route, workout, and notes fields, leaving partner coupons hardcoded and uneditable.
+**Pattern:** Shipping a public placeholder before defining its race-scoped authoring path makes the admin feel incomplete and encourages production sample data to outlive its intended phase.
+**Rule:** Every public race-content section must ship with an authorized race-scoped editor, validated storage contract, and honest empty state; placeholder partner offers must never be presented as operational coupons.
+**Date:** 2026-11-04
+
 ## Lesson: Phase ordering
 
 **Trigger:** The user clarified that the athlete portal needs a dedicated race-selection home page before the unlocked race tabs are built.

@@ -23,7 +23,7 @@
     <section class="admin-heading" aria-labelledby="adminTitle">
       <p class="eyebrow">ATHLETE PORTAL ADMIN</p>
       <h1 id="adminTitle">Race-day content</h1>
-      <p>Update the route, workouts, and important notes athletes see after unlocking a race.</p>
+      <p>Update race-day details, prep resources, and partner offers athletes see after unlocking a race.</p>
     </section>
 
     <section id="adminLogin" class="admin-panel admin-login" aria-labelledby="loginTitle">
@@ -46,7 +46,7 @@
       <div class="admin-panel-heading">
         <div>
           <p class="step-label">RACE CONTENT</p>
-          <h2 id="editorTitle">Route &amp; workouts</h2>
+          <h2 id="editorTitle">Race content</h2>
         </div>
         <button id="adminLogout" class="admin-link-button" type="button">Log out</button>
       </div>
@@ -61,6 +61,13 @@
 
         <fieldset id="contentFields" disabled>
           <legend class="sr-only">Race-day information</legend>
+          <nav class="admin-content-tabs" role="tablist" aria-label="Race content sections">
+            <button class="admin-content-tab active" type="button" role="tab" aria-selected="true" aria-controls="raceDayAdminPanel" data-admin-tab="race-day">Race day</button>
+            <button class="admin-content-tab" type="button" role="tab" aria-selected="false" aria-controls="prepAdminPanel" data-admin-tab="prep" tabindex="-1">Prep guides</button>
+            <button class="admin-content-tab" type="button" role="tab" aria-selected="false" aria-controls="offersAdminPanel" data-admin-tab="offers" tabindex="-1">Offers</button>
+          </nav>
+
+          <section id="raceDayAdminPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="race-day">
           <div class="admin-content-section">
             <div class="admin-section-heading">
               <span>01</span>
@@ -100,11 +107,34 @@
             <label for="raceDayNotes">Important notes</label>
             <textarea id="raceDayNotes" rows="6" maxlength="8000" placeholder="Example: Arrive 45 minutes before your heat…"></textarea>
           </div>
+          </section>
+
+          <section id="prepAdminPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="prep" hidden>
+            <div class="admin-list-heading">
+              <div>
+                <h3>Prep guides</h3>
+                <p>Add up to 12 race-specific links, PDFs, packing lists, or training resources.</p>
+              </div>
+              <button id="addPrepGuide" class="admin-secondary-button" type="button">Add guide</button>
+            </div>
+            <div id="prepGuideList" class="admin-item-list"></div>
+          </section>
+
+          <section id="offersAdminPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="offers" hidden>
+            <div class="admin-list-heading">
+              <div>
+                <h3>Partner offers</h3>
+                <p>Add up to 20 partner offers. Coupon codes are optional and inactive offers stay hidden from athletes.</p>
+              </div>
+              <button id="addOffer" class="admin-secondary-button" type="button">Add offer</button>
+            </div>
+            <div id="offerList" class="admin-item-list"></div>
+          </section>
         </fieldset>
 
         <div class="admin-save-bar">
           <div id="editorMessage" class="admin-message" role="status"></div>
-          <button id="saveContent" type="submit" disabled>Save race-day information</button>
+          <button id="saveContent" type="submit" disabled>Save race content</button>
         </div>
       </form>
     </section>

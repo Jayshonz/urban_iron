@@ -1,4 +1,22 @@
-# Current task: Portal cross-links
+# Current task: Complete Athlete content admin
+
+## Plan
+
+- [x] Diagnose the hosted save failure from production logs.
+- [ ] Create and verify the race-content worksheet with the complete schema.
+- [ ] Add validated, race-scoped Prep Guide and Offer storage.
+- [ ] Build compact admin editors for all public content tabs.
+- [ ] Render saved guides and offers in the unlocked athlete portal.
+- [ ] Run focused tests, syntax checks, responsive review, and hosted verification.
+
+## Progress
+
+- [x] Root cause identified: the runtime service account can read the registry but cannot create a worksheet tab (`403 PERMISSION_DENIED`).
+- [ ] Storage repair and implementation in progress.
+
+---
+
+# Previous task: Portal cross-links
 
 ## Plan
 
