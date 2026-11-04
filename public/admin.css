@@ -1,5 +1,6 @@
 .admin-body{min-height:100svh;background:#e4e2dd}
 .admin-public-link{display:inline-flex;min-height:44px;align-items:center;color:#e4e2dd;font-size:11px;font-weight:800;letter-spacing:.06em;text-underline-offset:4px;text-transform:uppercase}
+.admin-portal-links{display:flex;align-items:center;gap:18px}.admin-portal-links a{color:#e4e2dd;font-size:11px;font-weight:800;letter-spacing:.06em;text-underline-offset:4px;text-transform:uppercase}
 .admin-main{width:min(calc(100% - 32px),860px);margin:0 auto;padding:48px 0 88px}
 .admin-heading{padding:0 0 30px;border-bottom:1px solid #aaa8a2}
 .admin-heading .eyebrow{margin:0 0 10px}
@@ -7,6 +8,7 @@
 .admin-heading>p:last-child{max-width:650px;margin:0;color:#4f4f4c;line-height:1.5}
 .admin-panel{padding:32px 0}
 .admin-login{max-width:480px}
+.admin-sso-button{display:flex;min-height:50px;align-items:center;justify-content:center;margin-top:20px;border:1px solid #101010;background:#101010;color:#fff;font-weight:800;text-decoration:none;text-transform:uppercase}.admin-sso-button:hover{background:#d8ff3e;color:#101010}.admin-password-fallback{margin-top:22px;border-top:1px solid #aaa8a2;padding-top:18px}.admin-password-fallback summary{cursor:pointer;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .admin-panel h2{margin:4px 0 20px;font-size:32px;line-height:1;text-transform:uppercase}
 .admin-panel-heading{display:flex;align-items:start;justify-content:space-between;gap:20px}
 .admin-panel label{display:block;margin:16px 0 7px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
@@ -34,4 +36,4 @@
 .admin-message{min-height:20px;color:#5d5c58;font-size:13px;line-height:1.4}
 .admin-message.error-text{color:#a12020;font-weight:700}
 .admin-message.success-text{color:#176429;font-weight:700}
-@media(max-width:620px){.admin-main{width:min(calc(100% - 24px),860px);padding-top:32px}.admin-heading h1{font-size:40px}.admin-panel-heading{align-items:center}.admin-save-bar{align-items:stretch;flex-direction:column}.admin-save-bar button{width:100%}.admin-content-section{padding:24px 0}}
+@media(max-width:620px){.admin-main{width:min(calc(100% - 24px),860px);padding-top:32px}.admin-heading h1{font-size:40px}.admin-panel-heading{align-items:center}.admin-save-bar{align-items:stretch;flex-direction:column}.admin-save-bar button{width:100%}.admin-content-section{padding:24px 0}.admin-portal-links{gap:10px}.admin-portal-links a{font-size:9px}}
