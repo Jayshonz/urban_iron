@@ -169,9 +169,7 @@ function renderRaceWorkspace() {
   $('photographerUploadStatus').textContent = race.photographerUploads || 'Not configured';
   $('photoRaceSlug').textContent = race.photoRaceSlug || 'Not configured';
   const photoBase = race.photoRaceSlug ? `https://photos.urbaniron.co/events/${encodeURIComponent(race.photoRaceSlug)}` : '';
-  const uploadBase = race.photoRaceSlug ? `https://admin.urbaniron.co/photographer/events/${encodeURIComponent(race.photoRaceSlug)}` : '';
   setLink('viewPhotoGallery', photoBase, Boolean(photoBase));
-  setLink('openPhotographerUploads', uploadBase, Boolean(uploadBase));
 }
 
 function openRace(raceId) {
