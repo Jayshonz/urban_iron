@@ -1,4 +1,22 @@
-# Current task: Unified race admin and registry
+# Current task: Central admin home and photographer separation
+
+## Plan
+
+- [x] Confirm the current domain, authentication, race-admin, photo-admin, and photographer routes.
+- [x] Add a neutral central admin landing page with Races and Photos only.
+- [x] Remove photographer-upload navigation from the race admin.
+- [ ] Add bounded host/path routing for the admin homepage and legacy photographer URL.
+- [ ] Run tests, browser QA, deploy, and verify every production destination.
+
+## Progress
+
+- [x] Selected a route-level implementation that preserves the private photo app and shared login.
+- [x] Central landing page and race-admin navigation implemented and locally reviewed.
+- [ ] Production routing and deployment verification in progress.
+
+---
+
+# Previous task: Unified race admin and registry
 
 ## Plan
 
