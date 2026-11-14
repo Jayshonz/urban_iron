@@ -21,7 +21,7 @@ main{max-width:none;margin:0;padding:0}
 .brand img{display:block;width:68px;height:auto}
 .header-actions{display:flex;align-items:center;gap:18px}
 .platform-nav{display:flex;align-items:center;gap:10px}
-.platform-nav a{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;padding:0 6px;color:#e4e2dd;font-size:11px;font-weight:700;letter-spacing:.04em;text-underline-offset:4px;text-transform:uppercase}
+.platform-nav a{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;padding:0 8px;color:#e4e2dd;font-family:"Space Mono","Courier New",monospace;font-size:12px;font-weight:400;letter-spacing:normal;text-underline-offset:4px;text-transform:uppercase}
 .future-login{display:grid;justify-items:end;gap:1px;color:#e4e2dd;cursor:default}
 .future-login span{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
 .future-login small{color:#aaa;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
@@ -93,4 +93,5 @@ main{max-width:none;margin:0;padding:0}
 #raceFlow{max-width:none}
 @media(min-width:768px){.header-inner,.race-shell-inner{padding-inline:24px}}
 @media(max-width:640px){.workspace-tabs{display:flex}.workspace-tab{flex:0 0 auto;min-width:132px}.workspace-tab[data-tab="route"]{min-width:170px}.race-day-section{grid-template-columns:1fr;gap:9px}.race-day-link{grid-column:1}.prep-guide-card{grid-template-columns:1fr;gap:14px;padding:14px}.prep-guide-link{justify-content:center}.offer-card{grid-template-columns:86px minmax(0,1fr);gap:14px;padding:14px}.offer-logo-wrap{min-height:78px;padding:8px}.offer-logo{max-width:78px;max-height:58px}.offer-logo-create{max-width:66px}.offer-copy h4{font-size:18px}.offer-action{grid-column:1/-1;grid-template-columns:auto 1fr;align-items:end}.offer-action .offer-link{grid-column:1/-1}.offer-code-label{align-self:center}.offer-code{min-width:0}}
-@media(max-width:520px){.header-inner{gap:8px;padding-inline:12px}.header-actions{gap:8px}.platform-nav{gap:1px}.platform-nav a{padding-inline:4px;font-size:10px}.home-race-selector{padding-inline:0}.home-race-selector h1{font-size:clamp(44px,15vw,64px)}.future-login span{font-size:10px}.future-login small{font-size:8px}}
+@media(max-width:640px){.header-inner{flex-wrap:wrap;padding-block:10px}.header-actions{width:100%;justify-content:space-between}.platform-nav{min-width:0;overflow-x:auto;scrollbar-width:none}.platform-nav::-webkit-scrollbar{display:none}}
+@media(max-width:520px){.header-inner{gap:4px;padding-inline:12px}.header-actions{gap:8px}.platform-nav{gap:1px}.platform-nav a{padding-inline:4px;font-size:10px}.home-race-selector{padding-inline:0}.home-race-selector h1{font-size:clamp(44px,15vw,64px)}.future-login span{font-size:10px}.future-login small{font-size:8px}}
