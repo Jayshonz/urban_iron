@@ -14,9 +14,11 @@ Vercel OIDC + Google Cloud Workload Identity Federation, with narrowly scoped Go
 
 ## Unified race admin
 
+- `https://admin.urbaniron.co/` is the neutral administrator entry with Race Operations and Photo Management destinations.
 - Staff open `/admin` and authenticate through the shared Urban Iron Google admin handoff or the temporary password fallback.
 - The All Races view reads the canonical Urban Iron Race Registry and exposes race-scoped operations, portal, heat-release, assignment-lock, and check-in controls.
-- The race workspace links directly to the race workbook, public Athlete portal, Photo admin, race gallery, and race-scoped Photographer uploader.
+- The race workspace links directly to the race workbook, public Athlete portal, Photo admin, and race gallery.
+- Photographer uploads remain outside admin at `https://photos.urbaniron.co/photographer`.
 - The Portal Content section saves route, workout, race-day notes, prep guides, and offers to the existing `Athlete Portal Content` worksheet.
 - Public heat lookup and roster endpoints enforce the canonical `Heats Released` control; unreleased races display “Heats available soon.”
 - The worksheet is created with race-scoped rows the first time content is saved.
