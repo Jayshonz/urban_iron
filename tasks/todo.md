@@ -1,4 +1,24 @@
-# Current task: Complete Athlete content admin
+# Current task: Unified race admin and registry
+
+## Plan
+
+- [ ] Extend and verify the canonical Urban Iron Race Registry schema.
+- [ ] Add authenticated all-race registry read and bounded control-update APIs.
+- [ ] Build the clean All Races directory and race workspace navigation.
+- [ ] Integrate existing Athlete content editing without duplicating forms or storage.
+- [ ] Add direct Athlete, Photo admin, Photographer upload, workbook, and public-preview access.
+- [ ] Add focused tests and run full syntax/test verification.
+- [ ] Deploy and verify the hosted admin read path before enabling live control writes.
+
+## Progress
+
+- [x] Audited the Athlete portal, Photo platform, photographer entry flow, both registry spreadsheets, and current SSO handoff.
+- [x] Confirmed the main heat-operations registry is the intended canonical race index.
+- [ ] Registry schema extension in progress.
+
+---
+
+# Previous task: Complete Athlete content admin
 
 ## Plan
 
