@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Separate administrator and operator audiences
+
+**Trigger:** Photographer uploads were presented alongside race and photo administration even though photographers are external operators choosing a race and uploading media.
+**Pattern:** Grouping every internal-looking workflow under “Admin” blurred audience boundaries and made the photo platform appear to own all Urban Iron administration.
+**Rule:** Keep the central admin limited to administrator destinations. Put photographer uploads on the public photo domain, link them from the photo-platform navigation, and never describe the uploader as an admin tool.
+**Date:** 2026-11-13
+
 ## Lesson: Public content promises require matching admin controls
 
 **Trigger:** Prep Guides and Offers were visible as public portal sections, but the Athlete admin only exposed route, workout, and notes fields, leaving partner coupons hardcoded and uneditable.
