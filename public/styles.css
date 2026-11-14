@@ -86,6 +86,10 @@ main{max-width:none;margin:0;padding:0}
 .offer-code{display:block;padding:10px;border:1px dashed #8f8e89;background:#fff;color:#101010;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:800;letter-spacing:.04em;text-align:center}
 .offer-link{display:block;padding:10px 12px;color:#fff;background:#101010;border:1px solid #101010;font-size:12px;font-weight:800;text-align:center;text-decoration:none;text-transform:uppercase}
 .offer-link:hover{color:#101010;background:#d8ff3e}
+.workspace-tab.unavailable{color:#777;background:#dedbd4}
+.heat-unavailable{padding:34px;border:1px solid #c8c5be;background:#e5e3de;color:#686762}
+.heat-unavailable h3{margin:4px 0 10px;color:#4f4f4c}
+.heat-unavailable p:last-child{max-width:520px;margin:0;line-height:1.55}
 #raceFlow{max-width:none}
 @media(min-width:768px){.header-inner,.race-shell-inner{padding-inline:24px}}
 @media(max-width:640px){.workspace-tabs{display:flex}.workspace-tab{flex:0 0 auto;min-width:132px}.workspace-tab[data-tab="route"]{min-width:170px}.race-day-section{grid-template-columns:1fr;gap:9px}.race-day-link{grid-column:1}.prep-guide-card{grid-template-columns:1fr;gap:14px;padding:14px}.prep-guide-link{justify-content:center}.offer-card{grid-template-columns:86px minmax(0,1fr);gap:14px;padding:14px}.offer-logo-wrap{min-height:78px;padding:8px}.offer-logo{max-width:78px;max-height:58px}.offer-logo-create{max-width:66px}.offer-copy h4{font-size:18px}.offer-action{grid-column:1/-1;grid-template-columns:auto 1fr;align-items:end}.offer-action .offer-link{grid-column:1/-1}.offer-code-label{align-self:center}.offer-code{min-width:0}}
