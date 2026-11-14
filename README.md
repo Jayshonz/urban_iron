@@ -12,10 +12,13 @@ Vercel OIDC + Google Cloud Workload Identity Federation, with narrowly scoped Go
 - Athletes can open their heat roster and see everyone assigned to that heat without exposing emails.
 - Race-specific route, workout, and race-day notes are visible only after the matching race is unlocked.
 
-## Race-day content editor
+## Unified race admin
 
-- Staff open `/admin` and authenticate with the athlete-portal admin password.
-- The editor lists published races and saves route, workout, and race-day notes to an `Athlete Portal Content` worksheet in the registry spreadsheet.
+- Staff open `/admin` and authenticate through the shared Urban Iron Google admin handoff or the temporary password fallback.
+- The All Races view reads the canonical Urban Iron Race Registry and exposes race-scoped operations, portal, heat-release, assignment-lock, and check-in controls.
+- The race workspace links directly to the race workbook, public Athlete portal, Photo admin, race gallery, and race-scoped Photographer uploader.
+- The Portal Content section saves route, workout, race-day notes, prep guides, and offers to the existing `Athlete Portal Content` worksheet.
+- Public heat lookup and roster endpoints enforce the canonical `Heats Released` control; unreleased races display “Heats available soon.”
 - The worksheet is created with race-scoped rows the first time content is saved.
 - Admin sessions are HTTP-only, secure, same-site cookies and expire after eight hours.
 
@@ -27,6 +30,7 @@ Vercel OIDC + Google Cloud Workload Identity Federation, with narrowly scoped Go
 - GCP_WORKLOAD_IDENTITY_POOL_ID
 - GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID
 - RACE_REGISTRY_SHEET_ID
+- ADMIN_RACE_REGISTRY_SHEET_ID
 - RACE_PASSWORDS_SHEET_ID
 - ATHLETE_ADMIN_PASSWORD (a unique 12+ character secret, stored as a Vercel Sensitive environment variable)
 
