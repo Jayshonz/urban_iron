@@ -73,6 +73,13 @@ function activateTab(tabName, { focus = false } = {}) {
   if (tabName !== 'heat' && selected && accessToken) loadRaceDayContent();
 }
 
+function setHeatAvailability(released) {
+  if (selected) selected.heatsReleased = Boolean(released);
+  $('searchPanel').hidden = !released;
+  $('heatUnavailable').hidden = Boolean(released);
+  $('heatTab').classList.toggle('unavailable', !released);
+}
+
 workspaceTabs.forEach((tab, index) => {
   tab.addEventListener('click', () => activateTab(tab.dataset.tab));
   tab.addEventListener('keydown', (event) => {
@@ -104,6 +111,7 @@ async function choose(race) {
   renderPrepPlaceholder();
   renderOffersPlaceholder();
   $('workspace').hidden = true;
+  setHeatAvailability(race.heatsReleased !== false);
   activateTab('heat');
   window.scrollTo({ top: 0, behavior: 'auto' });
 
@@ -142,12 +150,13 @@ async function unlock() {
   try {
     const data = await api('/api/unlock', { raceId: selected.id, password: $('password').value });
     accessToken = data.accessToken;
+    setHeatAvailability(data.heatsReleased !== false);
     $('password').value = '';
     $('gate').hidden = true;
     $('workspace').hidden = false;
     activateTab('heat');
     loadRaceDayContent();
-    $('query').focus();
+    if (selected.heatsReleased) $('query').focus();
   } catch (error) {
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
   }
@@ -159,11 +168,12 @@ async function unlockPasswordlessRace() {
   try {
     const data = await api('/api/unlock', { raceId: selected.id });
     accessToken = data.accessToken;
+    setHeatAvailability(data.heatsReleased !== false);
     result.innerHTML = '';
     $('workspace').hidden = false;
     activateTab('heat');
     loadRaceDayContent();
-    $('query').focus();
+    if (selected.heatsReleased) $('query').focus();
   } catch (error) {
     $('workspace').hidden = false;
     activateTab('heat');
@@ -177,6 +187,7 @@ $('query').addEventListener('keydown', (event) => {
 });
 
 async function search() {
+  if (!selected?.heatsReleased) return;
   const result = $('result');
   result.textContent = 'Searching…';
   try {
