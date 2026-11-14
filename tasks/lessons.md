@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Cross-property navigation is one contract
+
+**Trigger:** The Athlete and Photo portals had reciprocal links, but their visible navigation differed in item count, typography, weight, spacing, and platform affordances.
+**Pattern:** Adding links independently to sibling products makes the destinations technically connected while still feeling like unrelated websites.
+**Rule:** Define public cross-property navigation as one ordered contract. When one portal gains a shared destination or changes its header presentation, audit and align every sibling portal before calling the navigation complete.
+**Date:** 2026-11-13
+
 ## Lesson: Separate administrator and operator audiences
 
 **Trigger:** Photographer uploads were presented alongside race and photo administration even though photographers are external operators choosing a race and uploading media.
