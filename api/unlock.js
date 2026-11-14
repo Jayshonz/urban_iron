@@ -16,7 +16,10 @@ export default async function handler(req, res) {
     }
 
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ accessToken: createRaceSession(raceId, context.password) });
+    return res.status(200).json({
+      accessToken: createRaceSession(raceId, context.password),
+      heatsReleased: context.controls ? context.controls.heatsReleased : true,
+    });
   } catch (error) {
     console.error('unlock error', error);
     return res.status(500).json({ error: 'Unable to unlock race' });
