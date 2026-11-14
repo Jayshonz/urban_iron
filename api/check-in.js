@@ -30,8 +30,11 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Session expired. Enter the race password again.' });
     }
 
-    const registryRows = await getCheckInEnabled(context.sheets);
-    if (!raceCheckInEnabled(registryRows, raceId)) {
+    const registryRows = context.controls ? [] : await getCheckInEnabled(context.sheets);
+    const enabled = context.controls
+      ? context.controls.checkInEnabled
+      : raceCheckInEnabled(registryRows, raceId);
+    if (!enabled) {
       return res.status(403).json({ error: 'Check-in is not currently open for this race.' });
     }
 
