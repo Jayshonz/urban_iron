@@ -1,4 +1,8 @@
 import { requestHasAdminSession, requestIsSameOrigin } from './admin-auth.js';
+import {
+  adminRegistrySpreadsheetId,
+  getAdminRaces,
+} from './admin-race-registry-store.js';
 import { getPublishedRaces, getSheetsClient } from './race-registry.js';
 import {
   getRaceContent,
@@ -15,6 +19,12 @@ function requestedRaceId(req) {
   }
 }
 
+async function getAdminContentRaces(sheets) {
+  const spreadsheetId = adminRegistrySpreadsheetId();
+  if (spreadsheetId) return getAdminRaces(sheets, spreadsheetId);
+  return getPublishedRaces(sheets);
+}
+
 export default async function handler(req, res) {
   if (!['GET', 'PUT'].includes(req.method)) return res.status(405).end();
   res.setHeader('Cache-Control', 'no-store');
@@ -25,12 +35,12 @@ export default async function handler(req, res) {
 
   try {
     const sheets = getSheetsClient();
-    const races = await getPublishedRaces(sheets);
+    const races = await getAdminContentRaces(sheets);
     const raceId = req.method === 'PUT' ? String(req.body?.raceId || '') : requestedRaceId(req);
 
     if (!raceId) return res.status(200).json({ races });
     if (!races.some((race) => race.id === raceId)) {
-      return res.status(404).json({ error: 'Published race not found' });
+      return res.status(404).json({ error: 'Race not found' });
     }
 
     if (req.method === 'GET') {
