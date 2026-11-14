@@ -61,12 +61,17 @@ export default async function handler(req, res) {
     if (!verifyRaceSession(accessToken, raceId, context.password)) {
       return res.status(401).json({ error: 'Session expired. Enter the race password again.' });
     }
+    if (context.controls && !context.controls.heatsReleased) {
+      return res.status(403).json({ error: 'Heats are not released for this race yet.' });
+    }
 
     const [rows, registryRows] = await Promise.all([
       getLookupRows(context.sheets, context.spreadsheetId),
       getCheckInEnabled(context.sheets),
     ]);
-    const checkInEnabled = raceCheckInEnabled(registryRows, raceId);
+    const checkInEnabled = context.controls
+      ? context.controls.checkInEnabled
+      : raceCheckInEnabled(registryRows, raceId);
 
     let checkInData = null;
     try {

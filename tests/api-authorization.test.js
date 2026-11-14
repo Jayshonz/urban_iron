@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import adminRaceContentHandler from '../api/admin-race-content.js';
+import adminRaceRegistryHandler from '../api/admin-race-registry.js';
 import raceContentHandler from '../api/race-content.js';
 
 function responseRecorder() {
@@ -29,6 +30,14 @@ test('admin race content denies requests without an admin session before storage
   const req = { method: 'GET', headers: {} };
   const res = responseRecorder();
   await adminRaceContentHandler(req, res);
+  assert.equal(res.statusCode, 401);
+  assert.equal(res.body.error, 'Admin session expired');
+});
+
+test('admin race registry denies requests without an admin session before storage access', async () => {
+  const req = { method: 'GET', headers: {} };
+  const res = responseRecorder();
+  await adminRaceRegistryHandler(req, res);
   assert.equal(res.statusCode, 401);
   assert.equal(res.body.error, 'Admin session expired');
 });

@@ -13,6 +13,9 @@ export default async function handler(req, res) {
     if (!verifyRaceSession(accessToken, raceId, context.password)) {
       return res.status(401).json({ error: 'Session expired. Enter the race password again.' });
     }
+    if (context.controls && !context.controls.heatsReleased) {
+      return res.status(403).json({ error: 'Heats are not released for this race yet.' });
+    }
 
     const rows = await getLookupRows(context.sheets, context.spreadsheetId);
     const target = norm(heatName);

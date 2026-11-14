@@ -3,140 +3,141 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Athlete Portal Admin · Urban Iron</title>
+  <title>Urban Iron Admin</title>
   <link rel="icon" type="image/png" href="/favicon.png">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#f6f6f3">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/admin.css">
 </head>
 <body class="admin-body">
-  <header class="portal-header">
-    <div class="header-inner">
-      <a class="brand" href="/" aria-label="Urban Iron athlete portal home">
-        <img src="/urban-iron-logo.png" alt="Urban Iron">
-      </a>
-      <nav class="admin-portal-links" aria-label="Admin portals"><a href="https://admin.urbaniron.co/admin">Photos admin</a><a class="admin-public-link" href="/">View athlete portal</a></nav>
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a class="admin-brand" href="/admin" aria-label="Urban Iron admin home"><img src="/urban-iron-logo.png" alt="Urban Iron"></a>
+      <nav class="admin-platform-nav" aria-label="Urban Iron platforms">
+        <a href="/">Athletes</a><a href="https://photos.urbaniron.co/">Photos</a><a href="https://admin.urbaniron.co/photographer">Photographer</a>
+      </nav>
     </div>
   </header>
 
   <main class="admin-main">
-    <section class="admin-heading" aria-labelledby="adminTitle">
-      <p class="eyebrow">ATHLETE PORTAL ADMIN</p>
-      <h1 id="adminTitle">Race-day content</h1>
-      <p>Update race-day details, prep resources, and partner offers athletes see after unlocking a race.</p>
-    </section>
-
-    <section id="adminLogin" class="admin-panel admin-login" aria-labelledby="loginTitle">
-      <p class="step-label">STAFF ACCESS</p>
-      <h2 id="loginTitle">Sign in</h2>
-      <p>Use your approved Urban Iron admin sign-in to access both portals.</p>
-      <a class="admin-sso-button" href="https://admin.urbaniron.co/api/auth/handoff/athletes">Continue with Urban Iron Admin</a>
+    <section id="adminLogin" class="admin-login" aria-labelledby="loginTitle">
+      <p class="admin-eyebrow">Urban Iron admin</p>
+      <h1 id="loginTitle">Manage every race</h1>
+      <p>Use your approved Urban Iron account to manage race operations, athlete information, and photo access.</p>
+      <a class="admin-primary-button" href="https://admin.urbaniron.co/api/auth/handoff/athletes">Continue with Urban Iron Admin</a>
       <details class="admin-password-fallback">
         <summary>Temporary password fallback</summary>
-      <form id="adminLoginForm">
-        <label for="adminPassword">Admin password</label>
-        <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
-        <button id="adminLoginButton" type="submit">Open editor</button>
-      </form>
+        <form id="adminLoginForm">
+          <label for="adminPassword">Admin password</label>
+          <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
+          <button id="adminLoginButton" class="admin-primary-button" type="submit">Open admin</button>
+        </form>
       </details>
       <div id="loginMessage" class="admin-message" role="status"></div>
     </section>
 
-    <section id="adminEditor" class="admin-panel" aria-labelledby="editorTitle" hidden>
-      <div class="admin-panel-heading">
-        <div>
-          <p class="step-label">RACE CONTENT</p>
-          <h2 id="editorTitle">Race content</h2>
-        </div>
-        <button id="adminLogout" class="admin-link-button" type="button">Log out</button>
+    <section id="adminEditor" hidden>
+      <div class="admin-page-heading">
+        <div><p class="admin-eyebrow">Urban Iron admin</p><h1>Race registry</h1><p>One place to understand and operate every Urban Iron race.</p></div>
+        <button id="adminLogout" class="admin-text-button" type="button">Log out</button>
       </div>
 
-      <form id="contentForm">
-        <div class="admin-field admin-race-field">
-          <label for="adminRace">Race</label>
-          <select id="adminRace" required>
-            <option value="">Loading races…</option>
-          </select>
+      <section id="registryView" aria-labelledby="registryTitle">
+        <div class="admin-section-heading">
+          <div><h2 id="registryTitle">All races</h2><p>Choose a race to manage its athlete and photo experiences.</p></div>
+          <label class="admin-search-field" for="raceSearch"><span>Search</span><input id="raceSearch" type="search" placeholder="Race or city"></label>
+        </div>
+        <div id="registryMessage" class="admin-message" role="status"></div>
+        <div id="raceList" class="admin-race-list"></div>
+      </section>
+
+      <section id="raceWorkspace" hidden>
+        <button id="backToRaces" class="admin-back-button" type="button">← All races</button>
+        <div class="admin-race-heading">
+          <div><p id="raceCityDate" class="admin-eyebrow"></p><h2 id="raceName"></h2><div id="raceStatusChips" class="admin-status-chips" aria-label="Race status"></div></div>
+          <div class="admin-heading-actions">
+            <a id="previewAthletePortal" class="admin-secondary-button" href="/" target="_blank" rel="noopener noreferrer">Athlete portal</a>
+            <a id="openPhotoAdmin" class="admin-secondary-button" href="https://admin.urbaniron.co/admin">Photo admin</a>
+          </div>
         </div>
 
-        <fieldset id="contentFields" disabled>
-          <legend class="sr-only">Race-day information</legend>
-          <nav class="admin-content-tabs" role="tablist" aria-label="Race content sections">
-            <button class="admin-content-tab active" type="button" role="tab" aria-selected="true" aria-controls="raceDayAdminPanel" data-admin-tab="race-day">Race day</button>
-            <button class="admin-content-tab" type="button" role="tab" aria-selected="false" aria-controls="prepAdminPanel" data-admin-tab="prep" tabindex="-1">Prep guides</button>
-            <button class="admin-content-tab" type="button" role="tab" aria-selected="false" aria-controls="offersAdminPanel" data-admin-tab="offers" tabindex="-1">Offers</button>
-          </nav>
+        <nav class="admin-tabs" role="tablist" aria-label="Race admin sections">
+          <button class="admin-tab active" type="button" role="tab" aria-selected="true" aria-controls="overviewPanel" data-admin-tab="overview">Overview</button>
+          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="heatsPanel" data-admin-tab="heats" tabindex="-1">Athletes &amp; heats</button>
+          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="contentPanel" data-admin-tab="content" tabindex="-1">Portal content</button>
+          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="photosPanel" data-admin-tab="photos" tabindex="-1">Photos</button>
+        </nav>
 
-          <section id="raceDayAdminPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="race-day">
-          <div class="admin-content-section">
-            <div class="admin-section-heading">
-              <span>01</span>
-              <div>
-                <h3>Running route</h3>
-                <p>Describe the route, distance, laps, turns, or meeting point.</p>
-              </div>
+        <section id="overviewPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="overview">
+          <form id="raceControlsForm" class="admin-card">
+            <div class="admin-card-heading"><div><h3>Race controls</h3><p>These settings govern the live athlete experience and heat workflow.</p></div><span class="admin-save-note">Saved to the main registry</span></div>
+            <div class="admin-control-grid">
+              <label>Operations status<select id="operationsStatus"><option>Planned</option><option>Active</option><option>Inactive</option><option>Complete</option><option>Archived</option></select></label>
+              <label>Athlete portal<select id="athletePortalStatus"><option>Draft</option><option>Live</option><option>Offline</option></select></label>
+              <label>Heat lookup<select id="heatsReleased"><option value="No">Hidden</option><option value="Yes">Released</option></select></label>
+              <label>Assignments<select id="assignmentsLocked"><option value="No">Editable</option><option value="Yes">Locked</option></select></label>
+              <label>Check-in<select id="checkInEnabled"><option value="No">Closed</option><option value="Yes">Open</option></select></label>
             </div>
-            <label for="routeDescription">Route details</label>
-            <textarea id="routeDescription" rows="5" maxlength="5000" placeholder="Example: The run begins outside the venue and follows…"></textarea>
-            <label for="routeUrl">Route map link <span>Optional</span></label>
-            <input id="routeUrl" type="url" inputmode="url" placeholder="https://…">
+            <div class="admin-form-footer"><div id="controlsMessage" class="admin-message" role="status"></div><button id="saveControls" class="admin-primary-button" type="submit">Save controls</button></div>
+          </form>
+
+          <div class="admin-overview-grid">
+            <article class="admin-card"><p class="admin-card-label">Last heat-agent run</p><strong id="lastAgentRun">—</strong><span id="lastNewParticipants"></span></article>
+            <article class="admin-card"><p class="admin-card-label">Photo platform</p><strong id="overviewPhotoStatus">—</strong><span id="overviewUploadStatus"></span></article>
+            <article class="admin-card"><p class="admin-card-label">Registry updated</p><strong id="lastUpdated">—</strong><span id="lastUpdatedBy"></span></article>
           </div>
+        </section>
 
-          <div class="admin-content-section">
-            <div class="admin-section-heading">
-              <span>02</span>
-              <div>
-                <h3>Workouts</h3>
-                <p>List the workout order, movements, standards, and key instructions.</p>
-              </div>
-            </div>
-            <label for="workoutDescription">Workout details</label>
-            <textarea id="workoutDescription" rows="7" maxlength="5000" placeholder="Example: Workout 1 — Row, sandbag carry…"></textarea>
-            <label for="workoutUrl">Workout details link <span>Optional</span></label>
-            <input id="workoutUrl" type="url" inputmode="url" placeholder="https://…">
+        <section id="heatsPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="heats" hidden>
+          <div class="admin-card">
+            <div class="admin-card-heading"><div><h3>Athletes &amp; heats</h3><p>The race workbook remains the operational detail source.</p></div></div>
+            <dl class="admin-detail-list">
+              <div><dt>Raw registrations</dt><dd id="rawTabName">—</dd></div><div><dt>Heat assignments</dt><dd id="heatTabName">—</dd></div>
+              <div><dt>Slack audit</dt><dd id="slackChannel">—</dd></div><div><dt>Assignments</dt><dd id="assignmentState">—</dd></div>
+            </dl>
+            <div class="admin-link-row"><a id="openRaceWorkbook" class="admin-primary-button" target="_blank" rel="noopener noreferrer">Open race workbook</a></div>
           </div>
+        </section>
 
-          <div class="admin-content-section">
-            <div class="admin-section-heading">
-              <span>03</span>
-              <div>
-                <h3>Race-day notes</h3>
-                <p>Add arrival, parking, gear, weather, or venue information.</p>
+        <section id="contentPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="content" hidden>
+          <form id="contentForm">
+            <fieldset id="contentFields" disabled>
+              <legend class="sr-only">Athlete portal content</legend>
+              <div class="admin-card admin-content-section">
+                <div class="admin-card-heading"><div><h3>Route &amp; workouts</h3><p>Race-day links and instructions shown after an athlete opens the race.</p></div></div>
+                <label for="routeDescription">Route details</label><textarea id="routeDescription" rows="4" maxlength="5000"></textarea>
+                <label for="routeUrl">Route map link <span>Optional</span></label><input id="routeUrl" type="url" inputmode="url" placeholder="https://…">
+                <label for="workoutDescription">Workout details</label><textarea id="workoutDescription" rows="5" maxlength="5000"></textarea>
+                <label for="workoutUrl">Workout guide link <span>Optional</span></label><input id="workoutUrl" type="url" inputmode="url" placeholder="https://…">
+                <label for="raceDayNotes">Race-day notes</label><textarea id="raceDayNotes" rows="4" maxlength="8000"></textarea>
               </div>
+
+              <div class="admin-card admin-content-section">
+                <div class="admin-list-heading"><div><h3>Prep guides</h3><p>Add race-specific downloads and resources.</p></div><button id="addPrepGuide" class="admin-secondary-button" type="button">Add guide</button></div>
+                <div id="prepGuideList" class="admin-item-list"></div>
+              </div>
+
+              <div class="admin-card admin-content-section">
+                <div class="admin-list-heading"><div><h3>Offers</h3><p>Add partner offers and optional coupon codes.</p></div><button id="addOffer" class="admin-secondary-button" type="button">Add offer</button></div>
+                <div id="offerList" class="admin-item-list"></div>
+              </div>
+            </fieldset>
+            <div class="admin-form-footer"><div id="editorMessage" class="admin-message" role="status"></div><button id="saveContent" class="admin-primary-button" type="submit" disabled>Save portal content</button></div>
+          </form>
+        </section>
+
+        <section id="photosPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="photos" hidden>
+          <div class="admin-card">
+            <div class="admin-card-heading"><div><h3>Photo platform</h3><p>Photo assets, orders, matching, and uploads stay in the dedicated photo application.</p></div></div>
+            <dl class="admin-detail-list"><div><dt>Gallery</dt><dd id="photoStatus">—</dd></div><div><dt>Photographer uploads</dt><dd id="photographerUploadStatus">—</dd></div><div><dt>Photo race</dt><dd id="photoRaceSlug">—</dd></div></dl>
+            <div class="admin-link-row">
+              <a id="viewPhotoGallery" class="admin-secondary-button" target="_blank" rel="noopener noreferrer">View gallery</a>
+              <a id="openPhotographerUploads" class="admin-secondary-button" target="_blank" rel="noopener noreferrer">Photographer uploads</a>
+              <a class="admin-primary-button" href="https://admin.urbaniron.co/admin">Manage photos</a>
             </div>
-            <label for="raceDayNotes">Important notes</label>
-            <textarea id="raceDayNotes" rows="6" maxlength="8000" placeholder="Example: Arrive 45 minutes before your heat…"></textarea>
           </div>
-          </section>
-
-          <section id="prepAdminPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="prep" hidden>
-            <div class="admin-list-heading">
-              <div>
-                <h3>Prep guides</h3>
-                <p>Add up to 12 race-specific links, PDFs, packing lists, or training resources.</p>
-              </div>
-              <button id="addPrepGuide" class="admin-secondary-button" type="button">Add guide</button>
-            </div>
-            <div id="prepGuideList" class="admin-item-list"></div>
-          </section>
-
-          <section id="offersAdminPanel" class="admin-tab-panel" role="tabpanel" data-admin-panel="offers" hidden>
-            <div class="admin-list-heading">
-              <div>
-                <h3>Partner offers</h3>
-                <p>Add up to 20 partner offers. Coupon codes are optional and inactive offers stay hidden from athletes.</p>
-              </div>
-              <button id="addOffer" class="admin-secondary-button" type="button">Add offer</button>
-            </div>
-            <div id="offerList" class="admin-item-list"></div>
-          </section>
-        </fieldset>
-
-        <div class="admin-save-bar">
-          <div id="editorMessage" class="admin-message" role="status"></div>
-          <button id="saveContent" type="submit" disabled>Save race content</button>
-        </div>
-      </form>
+        </section>
+      </section>
     </section>
   </main>
   <script src="/admin.js"></script>
