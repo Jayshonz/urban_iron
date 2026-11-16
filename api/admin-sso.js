@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   if (!requestHasSsoOrigin(req)) return res.status(403).json({ error: 'Invalid sign-in origin' });
   const identity = verifyAdminHandoff(assertionFromBody(req.body));
   if (!identity) return res.status(401).json({ error: 'Admin sign-in expired. Start again.' });
-  res.setHeader('Set-Cookie', adminSessionCookie(createAdminSession({ authMethod: 'google', email: identity.email })));
+  res.setHeader('Set-Cookie', adminSessionCookie(createAdminSession(identity)));
   res.setHeader('Location', '/admin');
   return res.status(303).end();
 }

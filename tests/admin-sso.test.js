@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { ATHLETE_ADMIN_AUDIENCE, requestHasSsoOrigin, verifyAdminHandoff } from '../api/admin-sso-contract.js';
+import {
+  ATHLETE_ADMIN_AUDIENCE,
+  PHOTO_ADMIN_AUDIENCE,
+  createPasswordAdminHandoff,
+  requestHasSsoOrigin,
+  verifyAdminHandoff,
+} from '../api/admin-sso-contract.js';
 
 const secret = 'a-secure-cross-portal-test-secret-value';
 
@@ -29,8 +36,23 @@ test.beforeEach(() => {
 });
 
 test('accepts an exact short-lived handoff and rejects tampering', () => {
-  assert.deepEqual(verifyAdminHandoff(assertion()), { email: 'jake@urbaniron.co' });
+  assert.deepEqual(verifyAdminHandoff(assertion()), { authMethod: 'google', email: 'jake@urbaniron.co' });
   assert.equal(verifyAdminHandoff(`${assertion()}tampered`), null);
+});
+
+test('creates a password-session handoff for the Photo Admin without exposing the password', () => {
+  const token = createPasswordAdminHandoff({
+    audience: PHOTO_ADMIN_AUDIENCE,
+    issuer: 'https://athletes.urbaniron.co',
+    secret,
+  });
+  const [encoded] = token.split('.');
+  const payload = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
+  assert.equal(payload.version, 2);
+  assert.equal(payload.audience, PHOTO_ADMIN_AUDIENCE);
+  assert.equal(payload.subject, 'shared-admin');
+  assert.equal(payload.authMethod, 'password');
+  assert.equal(JSON.stringify(payload).includes('a-secure-test-admin-password'), false);
 });
 
 test('rejects expired, wrong-audience, and unapproved-email handoffs', () => {
@@ -43,4 +65,13 @@ test('rejects expired, wrong-audience, and unapproved-email handoffs', () => {
 test('requires the exact central admin origin', () => {
   assert.equal(requestHasSsoOrigin({ headers: { origin: 'https://admin.urbaniron.co' } }), true);
   assert.equal(requestHasSsoOrigin({ headers: { origin: 'https://evil.example' } }), false);
+});
+
+test('Race Admin handoff requires a session and posts only a signed assertion', async () => {
+  const source = await readFile(new URL('../api/admin-handoff.js', import.meta.url), 'utf8');
+  assert.match(source, /requestHasAdminSession\(req\)/);
+  assert.match(source, /method="post"/);
+  assert.match(source, /name="assertion"/);
+  assert.doesNotMatch(source, /URBAN_IRON_ADMIN_PASSWORD|ATHLETE_ADMIN_PASSWORD/);
+  assert.doesNotMatch(source, /\?assertion=/);
 });

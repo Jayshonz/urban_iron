@@ -5,7 +5,7 @@ export const ADMIN_COOKIE_NAME = 'urban_iron_athlete_admin';
 const ADMIN_SESSION_TTL_SECONDS = 8 * 60 * 60;
 
 function adminPassword() {
-  return String(process.env.ATHLETE_ADMIN_PASSWORD || '');
+  return String(process.env.URBAN_IRON_ADMIN_PASSWORD || process.env.ATHLETE_ADMIN_PASSWORD || '');
 }
 
 function ssoSecret() {

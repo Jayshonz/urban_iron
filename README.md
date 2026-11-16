@@ -15,7 +15,7 @@ Vercel OIDC + Google Cloud Workload Identity Federation, with narrowly scoped Go
 ## Unified race admin
 
 - `https://admin.urbaniron.co/` is the neutral administrator entry with Race Operations and Photo Management destinations.
-- Staff open `/admin` and authenticate through the shared Urban Iron Google admin handoff or the temporary password fallback.
+- Staff open `/admin` and authenticate with the shared Urban Iron admin password. A signed cross-portal handoff may reuse that authenticated identity without transmitting the password.
 - The All Races view reads the canonical Urban Iron Race Registry and exposes race-scoped operations, portal, heat-release, assignment-lock, and check-in controls.
 - The race workspace links directly to the race workbook, public Athlete portal, Photo admin, and race gallery.
 - Photographer uploads remain outside admin at `https://photos.urbaniron.co/photographer`.
@@ -34,6 +34,13 @@ Vercel OIDC + Google Cloud Workload Identity Federation, with narrowly scoped Go
 - RACE_REGISTRY_SHEET_ID
 - ADMIN_RACE_REGISTRY_SHEET_ID
 - RACE_PASSWORDS_SHEET_ID
-- ATHLETE_ADMIN_PASSWORD (a unique 12+ character secret, stored as a Vercel Sensitive environment variable)
+- URBAN_IRON_ADMIN_PASSWORD (the shared 12+ character admin secret used by both admin deployments, stored as a Vercel Sensitive environment variable)
+- ATHLETE_ADMIN_PASSWORD (legacy Race Admin fallback; remove after `URBAN_IRON_ADMIN_PASSWORD` is configured)
+- ADMIN_SSO_SECRET (the same randomly generated 32+ character Sensitive value on both admin deployments)
+- ADMIN_SSO_ISSUER (`https://admin.urbaniron.co`)
+- ATHLETE_ADMIN_ISSUER (`https://athletes.urbaniron.co`)
+- PHOTO_ADMIN_URL (`https://admin.urbaniron.co`)
+
+The Photo Admin deployment must use the same human password, stored there as its scrypt `ADMIN_PASSWORD_HASH`, and the same `ADMIN_SSO_SECRET`. Signed assertions expire after 60 seconds and never contain the password.
 
 The Google service account must have editor access to the registry spreadsheet so the editor can create and update the `Athlete Portal Content` worksheet.

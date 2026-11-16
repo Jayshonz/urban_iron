@@ -13,16 +13,20 @@ import {
 } from '../api/admin-auth.js';
 
 const originalPassword = process.env.ATHLETE_ADMIN_PASSWORD;
+const originalSharedPassword = process.env.URBAN_IRON_ADMIN_PASSWORD;
 const originalSsoSecret = process.env.ADMIN_SSO_SECRET;
 const originalAllowedEmails = process.env.ADMIN_ALLOWED_EMAILS;
 
 test.beforeEach(() => {
+  delete process.env.URBAN_IRON_ADMIN_PASSWORD;
   process.env.ATHLETE_ADMIN_PASSWORD = 'a-secure-test-admin-password';
   process.env.ADMIN_SSO_SECRET = 'a-secure-test-admin-sso-secret-value';
   process.env.ADMIN_ALLOWED_EMAILS = 'jake@urbaniron.co';
 });
 
 test.after(() => {
+  if (originalSharedPassword === undefined) delete process.env.URBAN_IRON_ADMIN_PASSWORD;
+  else process.env.URBAN_IRON_ADMIN_PASSWORD = originalSharedPassword;
   if (originalPassword === undefined) delete process.env.ATHLETE_ADMIN_PASSWORD;
   else process.env.ATHLETE_ADMIN_PASSWORD = originalPassword;
   if (originalSsoSecret === undefined) delete process.env.ADMIN_SSO_SECRET;
@@ -42,6 +46,12 @@ test('requires a meaningful configured password', () => {
 test('compares the configured password without exposing it', () => {
   assert.equal(verifyAdminPassword('a-secure-test-admin-password'), true);
   assert.equal(verifyAdminPassword('wrong-password'), false);
+});
+
+test('prefers the shared cross-portal password when configured', () => {
+  process.env.URBAN_IRON_ADMIN_PASSWORD = 'the-shared-cross-portal-password';
+  assert.equal(verifyAdminPassword('the-shared-cross-portal-password'), true);
+  assert.equal(verifyAdminPassword('a-secure-test-admin-password'), false);
 });
 
 test('creates a valid admin session and rejects tampering or expiration', () => {
