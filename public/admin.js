@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 let races = [];
 let activeRaceId = '';
 let contentLoadedRaceId = '';
+const raceAdminApi = (path) => `/api/race-admin/${path}`;
 const adminTabs = Array.from(document.querySelectorAll('[data-admin-tab]'));
 
 async function request(path, options = {}) {
@@ -30,14 +31,12 @@ function activeRace() {
 }
 
 function showLogin(message = '') {
-  $('adminEditor').hidden = true;
-  $('adminLogin').hidden = false;
-  $('loginMessage').textContent = message;
-  $('adminPassword').value = '';
+  const next = encodeURIComponent('/races');
+  window.location.replace(`/login?next=${next}${message ? `&error=${encodeURIComponent(message)}` : ''}`);
+
 }
 
 function showEditor() {
-  $('adminLogin').hidden = true;
   $('adminEditor').hidden = false;
 }
 
@@ -199,7 +198,7 @@ async function initializeEditor() {
   showEditor();
   setMessage($('registryMessage'), 'Loading the main race registry…');
   try {
-    const data = await request('/api/admin-race-registry');
+    const data = await request(raceAdminApi('admin-race-registry'));
     races = data.races || [];
     setMessage($('registryMessage'), races.length ? `${races.length} races in the registry.` : 'No races are configured.');
     showRegistry();
@@ -293,7 +292,7 @@ async function loadRaceContent(raceId) {
   setEditorEnabled(false);
   setMessage($('editorMessage'), 'Loading portal content…');
   try {
-    const data = await request(`/api/admin-race-content?raceId=${encodeURIComponent(raceId)}`);
+    const data = await request(`${raceAdminApi('admin-race-content')}?raceId=${encodeURIComponent(raceId)}`);
     if (activeRaceId !== raceId) return;
     fillContent(data.content);
     contentLoadedRaceId = raceId;
@@ -314,7 +313,7 @@ $('raceControlsForm').addEventListener('submit', async (event) => {
   $('saveControls').disabled = true;
   setMessage($('controlsMessage'), 'Saving controls…');
   try {
-    const data = await request('/api/admin-race-registry', {
+    const data = await request(raceAdminApi('admin-race-registry'), {
       method: 'PATCH',
       body: JSON.stringify({ raceId: activeRaceId, controls: {
         status: $('operationsStatus').value,
@@ -353,7 +352,7 @@ $('contentForm').addEventListener('submit', async (event) => {
   $('saveContent').disabled = true;
   setMessage($('editorMessage'), 'Saving portal content…');
   try {
-    const data = await request('/api/admin-race-content', { method: 'PUT', body: JSON.stringify({
+    const data = await request(raceAdminApi('admin-race-content'), { method: 'PUT', body: JSON.stringify({
       raceId: activeRaceId,
       content: {
         routeDescription: $('routeDescription').value, routeUrl: $('routeUrl').value,
@@ -369,30 +368,16 @@ $('contentForm').addEventListener('submit', async (event) => {
   } finally { if (!$('adminEditor').hidden) $('saveContent').disabled = false; }
 });
 
-$('adminLoginForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  $('adminLoginButton').disabled = true;
-  setMessage($('loginMessage'), 'Signing in…');
-  try {
-    await request('/api/admin-session', { method: 'POST', body: JSON.stringify({ action: 'login', password: $('adminPassword').value }) });
-    $('adminPassword').value = '';
-    await initializeEditor();
-  } catch (error) { setMessage($('loginMessage'), error.message, 'error-text'); }
-  finally { $('adminLoginButton').disabled = false; }
-});
-
 $('adminLogout').addEventListener('click', async () => {
-  try { await request('/api/admin-session', { method: 'POST', body: JSON.stringify({ action: 'logout' }) }); }
-  finally { showLogin('You are logged out.'); }
+  try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }
+  finally { window.location.assign('/login'); }
 });
 
 async function start() {
   try {
-    const session = await request('/api/admin-session');
+    const session = await request(raceAdminApi('admin-session'));
     if (!session.configured) {
-      showLogin('Admin access needs to be configured in Vercel before this portal can be used.');
-      $('adminLoginButton').disabled = true;
-      return;
+      return showLogin('Race Admin access is not configured.');
     }
     if (session.authenticated) await initializeEditor(); else showLogin();
   } catch (error) { showLogin(error.message); }
