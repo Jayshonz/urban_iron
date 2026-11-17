@@ -1,3 +1,21 @@
+# Current task: Single-domain Urban Iron admin
+
+## Plan
+
+- [x] Remove the duplicate Race Admin login.
+- [x] Accept the scoped session from the central login.
+- [x] Mount Race Admin and its APIs under the canonical admin host paths.
+- [x] Create the Vercel microfrontend group.
+- [ ] Prove the composed preview before production promotion.
+
+## Verification
+
+- Local syntax checks pass.
+- Local suite passes: 32 tests, 0 failures.
+- Standalone Race and Photo preview builds are Ready.
+
+---
+
 # Current task: One-password Urban Iron admin
 
 ## Plan
