@@ -12,7 +12,7 @@
 .admin-primary-button{background:#202020;color:#fff}.admin-primary-button:hover{background:#383838}.admin-primary-button:disabled{opacity:.5;cursor:not-allowed}
 .admin-secondary-button{background:#fff;color:#202020}.admin-secondary-button:hover{background:#f0f0ed}
 .admin-login>.admin-primary-button{margin-top:18px}
-.admin-password-fallback{margin-top:24px;border-top:1px solid var(--admin-border);padding-top:18px}.admin-password-fallback summary{cursor:pointer;color:var(--admin-muted);font-size:13px;font-weight:600}.admin-password-fallback form{display:grid;gap:8px;margin-top:14px}.admin-password-fallback button{margin-top:4px}
+.admin-login-form{display:grid;gap:8px;margin-top:24px}.admin-login-form button{margin-top:4px}
 .admin-page-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding-bottom:26px;border-bottom:1px solid var(--admin-border)}.admin-page-heading p:last-child{margin:0;color:var(--admin-muted)}
 .admin-text-button,.admin-back-button{min-height:40px;border:0;background:transparent;color:inherit;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.admin-text-button:hover,.admin-back-button:hover{color:#000}
 .admin-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 14px}.admin-section-heading h2,.admin-race-heading h2{margin:0;font-size:27px;font-weight:650;letter-spacing:-.025em}.admin-section-heading p,.admin-card-heading p{margin:3px 0 0;color:var(--admin-muted)}

@@ -2,14 +2,22 @@ import crypto from 'node:crypto';
 import { safeEqual } from './session.js';
 
 export const ADMIN_COOKIE_NAME = 'urban_iron_athlete_admin';
+export const RACE_ADMIN_COOKIE_NAME = 'urban_iron_race_admin_session';
 const ADMIN_SESSION_TTL_SECONDS = 8 * 60 * 60;
 
 function adminPassword() {
-  return String(process.env.ATHLETE_ADMIN_PASSWORD || '');
+  return String(process.env.URBAN_IRON_ADMIN_PASSWORD || process.env.ATHLETE_ADMIN_PASSWORD || '');
 }
 
 function ssoSecret() {
   return String(process.env.ADMIN_SSO_SECRET || '');
+}
+
+function raceAdminSigningKey() {
+  return crypto
+    .createHash('sha256')
+    .update(`urban-iron-race-admin-bridge\n${ssoSecret()}`)
+    .digest();
 }
 
 function signingKey() {
@@ -27,8 +35,12 @@ export function adminSsoConfigured() {
   return ssoSecret().length >= 32 && String(process.env.ADMIN_ALLOWED_EMAILS || '').trim().length > 0;
 }
 
+export function raceAdminBridgeConfigured() {
+  return ssoSecret().length >= 32;
+}
+
 export function adminAuthConfigured() {
-  return adminPasswordConfigured() || adminSsoConfigured();
+  return adminPasswordConfigured() || adminSsoConfigured() || raceAdminBridgeConfigured();
 }
 
 export function verifyAdminPassword(value) {
@@ -75,6 +87,33 @@ export function verifyAdminSession(token) {
   }
 }
 
+export function verifyRaceAdminBridge(token) {
+  if (!raceAdminBridgeConfigured()) return false;
+  try {
+    const [encoded, signature, extra] = String(token || '').split('.');
+    if (!encoded || !signature || extra) return false;
+    const expected = crypto.createHmac('sha256', raceAdminSigningKey()).update(encoded).digest('base64url');
+    if (!safeEqual(signature, expected)) return false;
+    const payload = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
+    return payload.scope === 'race-admin'
+      && payload.issuer === 'urban-iron-photo-admin'
+      && Number(payload.exp) > Math.floor(Date.now() / 1000);
+  } catch {
+    return false;
+  }
+}
+
+export function createRaceAdminBridge(ttlSeconds = ADMIN_SESSION_TTL_SECONDS) {
+  if (!raceAdminBridgeConfigured()) throw new Error('Race Admin bridge is not configured');
+  const encoded = Buffer.from(JSON.stringify({
+    scope: 'race-admin',
+    issuer: 'urban-iron-photo-admin',
+    exp: Math.floor(Date.now() / 1000) + ttlSeconds,
+  })).toString('base64url');
+  const signature = crypto.createHmac('sha256', raceAdminSigningKey()).update(encoded).digest('base64url');
+  return `${encoded}.${signature}`;
+}
+
 export function parseCookies(header) {
   return String(header || '').split(';').reduce((cookies, pair) => {
     const separator = pair.indexOf('=');
@@ -88,7 +127,7 @@ export function parseCookies(header) {
 
 export function requestHasAdminSession(req) {
   const cookies = parseCookies(req.headers?.cookie);
-  return verifyAdminSession(cookies[ADMIN_COOKIE_NAME]);
+  return verifyRaceAdminBridge(cookies[RACE_ADMIN_COOKIE_NAME]) || verifyAdminSession(cookies[ADMIN_COOKIE_NAME]);
 }
 
 export function adminSessionCookie(token, maxAge = ADMIN_SESSION_TTL_SECONDS) {

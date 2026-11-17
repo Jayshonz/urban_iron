@@ -4,38 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Urban Iron Admin</title>
-  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="icon" type="image/png" href="/races/favicon.png">
   <meta name="theme-color" content="#f6f6f3">
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/admin.css">
+  <link rel="stylesheet" href="/races/styles.css">
+  <link rel="stylesheet" href="/races/admin.css">
 </head>
 <body class="admin-body">
   <header class="admin-header">
     <div class="admin-header-inner">
-      <a class="admin-brand" href="https://admin.urbaniron.co/" aria-label="Urban Iron admin home"><img src="/urban-iron-logo.png" alt="Urban Iron"></a>
+      <a class="admin-brand" href="/" aria-label="Urban Iron admin home">URBAN IRON</a>
       <nav class="admin-platform-nav" aria-label="Urban Iron platforms">
-        <a href="https://admin.urbaniron.co/">Admin home</a><a href="/admin" aria-current="page">Races</a><a href="https://admin.urbaniron.co/admin">Photos</a>
+        <a href="/">Admin home</a><a href="/races" aria-current="page">Races</a><a href="/photos">Photos</a>
       </nav>
     </div>
   </header>
 
   <main class="admin-main">
-    <section id="adminLogin" class="admin-login" aria-labelledby="loginTitle">
-      <p class="admin-eyebrow">Urban Iron admin</p>
-      <h1 id="loginTitle">Manage every race</h1>
-      <p>Use your approved Urban Iron account to manage race operations, athlete information, and photo access.</p>
-      <a class="admin-primary-button" href="https://admin.urbaniron.co/api/auth/handoff/athletes">Continue with Urban Iron Admin</a>
-      <details class="admin-password-fallback">
-        <summary>Temporary password fallback</summary>
-        <form id="adminLoginForm">
-          <label for="adminPassword">Admin password</label>
-          <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
-          <button id="adminLoginButton" class="admin-primary-button" type="submit">Open admin</button>
-        </form>
-      </details>
-      <div id="loginMessage" class="admin-message" role="status"></div>
-    </section>
-
     <section id="adminEditor" hidden>
       <div class="admin-page-heading">
         <div><p class="admin-eyebrow">Urban Iron admin</p><h1>Race registry</h1><p>One place to understand and operate every Urban Iron race.</p></div>
@@ -57,7 +41,7 @@
           <div><p id="raceCityDate" class="admin-eyebrow"></p><h2 id="raceName"></h2><div id="raceStatusChips" class="admin-status-chips" aria-label="Race status"></div></div>
           <div class="admin-heading-actions">
             <a id="previewAthletePortal" class="admin-secondary-button" href="/" target="_blank" rel="noopener noreferrer">Athlete portal</a>
-            <a id="openPhotoAdmin" class="admin-secondary-button" href="https://admin.urbaniron.co/admin">Photo admin</a>
+            <a id="openPhotoAdmin" class="admin-secondary-button" href="/photos">Photo admin</a>
           </div>
         </div>
 
@@ -132,13 +116,13 @@
             <dl class="admin-detail-list"><div><dt>Gallery</dt><dd id="photoStatus">—</dd></div><div><dt>Photographer uploads</dt><dd id="photographerUploadStatus">—</dd></div><div><dt>Photo race</dt><dd id="photoRaceSlug">—</dd></div></dl>
             <div class="admin-link-row">
               <a id="viewPhotoGallery" class="admin-secondary-button" target="_blank" rel="noopener noreferrer">View gallery</a>
-              <a class="admin-primary-button" href="https://admin.urbaniron.co/admin">Manage photos</a>
+              <a class="admin-primary-button" href="/photos">Manage photos</a>
             </div>
           </div>
         </section>
       </section>
     </section>
   </main>
-  <script src="/admin.js"></script>
+  <script src="/races/admin.js"></script>
 </body>
 </html>

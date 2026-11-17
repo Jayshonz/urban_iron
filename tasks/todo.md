@@ -1,17 +1,67 @@
-# Current task: Align Athlete and Photo portal navigation
+# Current task: Single-domain Urban Iron admin
+
+## Plan
+
+- [x] Remove the duplicate Race Admin login.
+- [x] Accept the scoped session from the central login.
+- [x] Mount Race Admin and its APIs under the canonical admin host paths.
+- [x] Create the Vercel microfrontend group.
+- [ ] Prove the composed preview before production promotion.
+
+## Verification
+
+- Local syntax checks pass.
+- Local suite passes: 32 tests, 0 failures.
+- Standalone Race and Photo preview builds are Ready.
+
+---
+
+# Current task: One-password Urban Iron admin
+
+## Plan
+
+- [x] Identify the two deployments, current login surfaces, and existing signed handoff.
+- [x] Make the shared password the primary Race Admin login.
+- [x] Complete the password-session handoff between Photo Admin and Race Admin.
+- [x] Add cross-application regression coverage for login, handoff, and failure states.
+- [x] Run Race Admin checks; verify both admin entry points after Photo Admin access is available.
+
+## Progress
+
+- [x] Confirmed Race Admin (`athletes.urbaniron.co`) and Photo Admin (`admin.urbaniron.co`) are separate Vercel projects.
+- [x] Confirmed the Race Admin already has a password session and a signed handoff verifier.
+- [x] Race Admin now presents one password form and supports the canonical `URBAN_IRON_ADMIN_PASSWORD` environment variable with a legacy fallback.
+- [x] Race Admin test suite passes: 27 tests, 0 failures; syntax checks and diff checks pass.
+- [x] Photo Admin repository access confirmed with read/write permissions.
+- [x] Race Admin now creates a short-lived password-session assertion for Photo Admin without transmitting the password.
+- [x] Photo Admin receiver and password-first UI implemented on `codex/shared-admin-password`.
+- [x] Photo Admin focused tests pass (6/6) and its Vercel preview production build is Ready.
+- [x] Race Admin tests pass (29/29) and syntax checks pass.
+
+---
+
+# Previous task: Align Athlete and Photo portal navigation
 
 ## Plan
 
 - [x] Measure both production headers and define the shared navigation contract.
-- [ ] Add the missing Photographer destination and align Athlete navigation styling.
-- [ ] Add regression coverage for labels, ordering, and destinations.
-- [ ] Run full checks, deploy, and visually verify production at desktop and mobile widths.
+- [x] Add the missing Photographer destination and align Athlete navigation styling.
+- [x] Add regression coverage for labels, ordering, and destinations.
+- [x] Run full checks, deploy, and visually verify production at desktop and mobile widths.
 
 ## Progress
 
 - [x] Confirmed that both portals already share Home, reciprocal portal, and Admin destinations.
 - [x] Identified the concrete visual mismatch: Athlete uses Arial 11/700; Photos uses Space Mono 12/400.
-- [ ] Athlete implementation in progress.
+- [x] Athlete navigation is live and matches the Photo portal's measured font, size, weight, padding, and link height.
+
+## Results
+
+- `npm run check` passed.
+- `npm test` passed with 25 tests and 0 failures.
+- Desktop and 390×844 browser reviews passed; mobile document width remained 390px with no horizontal overflow.
+- Production links for Home, Photos, Photographer, and Admin resolve, and the deployed Athlete metrics match the live Photo navigation.
+- PR #21 merged and production deployment completed successfully.
 
 ---
 

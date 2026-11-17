@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Shared credentials are not shared sessions
+
+**Trigger:** The two admin portals could use the same password, but separate domain cookies still made the user authenticate twice and obscured which admin surface they had entered.
+**Pattern:** Treating credential equality as single sign-on solves configuration while leaving the user experience fragmented.
+**Rule:** A multi-domain “one login” requirement must use a bounded signed handoff or deliberately shared cookie contract; never send the raw password between applications or claim the experience is unified merely because the password strings match.
+**Date:** 2026-11-15
+
 ## Lesson: Cross-property navigation is one contract
 
 **Trigger:** The Athlete and Photo portals had reciprocal links, but their visible navigation differed in item count, typography, weight, spacing, and platform affordances.

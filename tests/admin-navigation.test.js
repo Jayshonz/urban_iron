@@ -20,3 +20,19 @@ test('race admin does not expose photographer upload navigation', async () => {
   assert.doesNotMatch(script, /openPhotographerUploads/);
   assert.doesNotMatch(script, /\/photographer\/events/);
 });
+
+test('race admin presents the shared password as the primary login', async () => {
+  const html = await readFile(publicFile('admin.html'), 'utf8');
+  assert.match(html, /id="adminLoginForm" class="admin-login-form"/);
+  assert.match(html, /shared Urban Iron admin password/);
+  assert.match(html, /Open admin portal/);
+  assert.doesNotMatch(html, /Continue with Urban Iron Admin/);
+  assert.doesNotMatch(html, /Temporary password fallback/);
+});
+
+test('race admin routes Photo Admin navigation through the signed session handoff', async () => {
+  const html = await readFile(publicFile('admin.html'), 'utf8');
+  assert.match(html, /href="\/api\/admin-handoff">Photos<\/a>/);
+  assert.match(html, /id="openPhotoAdmin"[^>]+href="\/api\/admin-handoff"/);
+  assert.doesNotMatch(html, /href="https:\/\/admin\.urbaniron\.co\/admin">(?:Photos|Photo admin|Manage photos)/);
+});
