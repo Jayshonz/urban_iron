@@ -1,4 +1,4 @@
-import { requestHasAdminSession, requestIsSameOrigin } from './admin-auth.js';
+import { requestHasAdminSession, requestHasAdminWriteOrigin } from './admin-auth.js';
 import {
   adminRegistrySpreadsheetId,
   getAdminRaces,
@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   if (!['GET', 'PATCH'].includes(req.method)) return res.status(405).end();
   res.setHeader('Cache-Control', 'no-store');
   if (!requestHasAdminSession(req)) return res.status(401).json({ error: 'Admin session expired' });
-  if (req.method === 'PATCH' && !requestIsSameOrigin(req)) {
+  if (req.method === 'PATCH' && !requestHasAdminWriteOrigin(req)) {
     return res.status(403).json({ error: 'Invalid request origin' });
   }
 

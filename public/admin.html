@@ -48,7 +48,7 @@
         <nav class="admin-tabs" role="tablist" aria-label="Race admin sections">
           <button class="admin-tab active" type="button" role="tab" aria-selected="true" aria-controls="overviewPanel" data-admin-tab="overview">Overview</button>
           <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="heatsPanel" data-admin-tab="heats" tabindex="-1">Athletes &amp; heats</button>
-          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="contentPanel" data-admin-tab="content" tabindex="-1">Portal content</button>
+          <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="contentPanel" data-admin-tab="content" tabindex="-1">Guides &amp; offers</button>
           <button class="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="photosPanel" data-admin-tab="photos" tabindex="-1">Photos</button>
         </nav>
 
@@ -88,17 +88,8 @@
             <fieldset id="contentFields" disabled>
               <legend class="sr-only">Athlete portal content</legend>
               <div class="admin-card admin-content-section">
-                <div class="admin-card-heading"><div><h3>Route &amp; workouts</h3><p>Race-day links and instructions shown after an athlete opens the race.</p></div></div>
-                <label for="routeDescription">Route details</label><textarea id="routeDescription" rows="4" maxlength="5000"></textarea>
-                <label for="routeUrl">Route map link <span>Optional</span></label><input id="routeUrl" type="url" inputmode="url" placeholder="https://…">
-                <label for="workoutDescription">Workout details</label><textarea id="workoutDescription" rows="5" maxlength="5000"></textarea>
-                <label for="workoutUrl">Workout guide link <span>Optional</span></label><input id="workoutUrl" type="url" inputmode="url" placeholder="https://…">
-                <label for="raceDayNotes">Race-day notes</label><textarea id="raceDayNotes" rows="4" maxlength="8000"></textarea>
-              </div>
-
-              <div class="admin-card admin-content-section">
-                <div class="admin-list-heading"><div><h3>Prep guides</h3><p>Add race-specific downloads and resources.</p></div><button id="addPrepGuide" class="admin-secondary-button" type="button">Add guide</button></div>
-                <div id="prepGuideList" class="admin-item-list"></div>
+                <div class="admin-list-heading"><div><h3>Race Guides</h3><p>Add routes, workouts, handbooks, and other race-specific resources.</p></div><button id="addRaceGuide" class="admin-secondary-button" type="button">Add guide</button></div>
+                <div id="raceGuideList" class="admin-item-list"></div>
               </div>
 
               <div class="admin-card admin-content-section">
@@ -106,7 +97,7 @@
                 <div id="offerList" class="admin-item-list"></div>
               </div>
             </fieldset>
-            <div class="admin-form-footer"><div id="editorMessage" class="admin-message" role="status"></div><button id="saveContent" class="admin-primary-button" type="submit" disabled>Save portal content</button></div>
+            <div class="admin-form-footer"><div id="editorMessage" class="admin-message" role="status"></div><button id="saveContent" class="admin-primary-button" type="submit" disabled>Save guides &amp; offers</button></div>
           </form>
         </section>
 

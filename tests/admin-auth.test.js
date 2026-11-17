@@ -8,6 +8,7 @@ import {
   createAdminSession,
   parseCookies,
   requestHasAdminSession,
+  requestHasAdminWriteOrigin,
   verifyAdminPassword,
   verifyAdminSession,
 } from '../api/admin-auth.js';
@@ -74,4 +75,11 @@ test('reads the admin session only from the dedicated cookie', () => {
   assert.equal(parsed[ADMIN_COOKIE_NAME], token);
   assert.equal(requestHasAdminSession({ headers: { cookie: `${ADMIN_COOKIE_NAME}=${token}` } }), true);
   assert.equal(requestHasAdminSession({ headers: { cookie: 'unrelated=1' } }), false);
+});
+
+test('allows writes from the request host or canonical admin origin only', () => {
+  assert.equal(requestHasAdminWriteOrigin({ headers: { origin: 'https://athletes.urbaniron.co', host: 'athletes.urbaniron.co' } }), true);
+  assert.equal(requestHasAdminWriteOrigin({ headers: { origin: 'https://admin.urbaniron.co', host: 'athletes.urbaniron.co' } }), true);
+  assert.equal(requestHasAdminWriteOrigin({ headers: { origin: 'https://evil.example', host: 'athletes.urbaniron.co' } }), false);
+  assert.equal(requestHasAdminWriteOrigin({ headers: { origin: 'not a url', host: 'athletes.urbaniron.co' } }), false);
 });

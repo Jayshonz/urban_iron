@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Reverse proxies change the browser origin contract
+
+**Trigger:** Race Admin was moved under `admin.urbaniron.co`, but proxied write requests still reached the Athlete backend, whose CSRF check accepted only the backend host.
+**Pattern:** Moving a UI behind a canonical host can preserve sessions and routes while silently breaking state-changing requests at origin validation.
+**Rule:** Whenever an authenticated interface is proxied across hosts, test a real state-changing request with the browser-visible `Origin`. Allow only explicit trusted admin origins, keep hostile-origin rejection, and verify both read and write paths before declaring the move complete.
+**Date:** 2026-11-16
+
 ## Lesson: Shared credentials are not shared sessions
 
 **Trigger:** The two admin portals could use the same password, but separate domain cookies still made the user authenticate twice and obscured which admin surface they had entered.
