@@ -39,7 +39,7 @@
     <div class="home-race-selector">
       <p class="eyebrow">ATHLETE PORTAL</p>
       <h1 id="homeTitle">Find your race</h1>
-      <p>Choose your event for heat lookup, race-day information, prep guides, and partner offers.</p>
+          <p>Choose your event for heats, race guides, and partner offers.</p>
       <form id="raceForm" class="home-race-form">
         <label class="sr-only" for="raceSelect">Select race</label>
         <select id="raceSelect" disabled>
@@ -65,9 +65,8 @@
 
       <div id="workspace" class="race-workspace" hidden>
         <nav class="workspace-tabs" role="tablist" aria-label="Race resources">
-          <button id="heatTab" class="workspace-tab active" type="button" role="tab" aria-selected="true" aria-controls="heatPanel" data-tab="heat">Heat Lookup</button>
-          <button id="routeTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="routePanel" data-tab="route" tabindex="-1">Route &amp; Workouts</button>
-          <button id="prepTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="prepPanel" data-tab="prep" tabindex="-1">Prep Guides</button>
+          <button id="heatTab" class="workspace-tab active" type="button" role="tab" aria-selected="true" aria-controls="heatPanel" data-tab="heat">Heats</button>
+          <button id="guidesTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="guidesPanel" data-tab="guides" tabindex="-1">Race Guides</button>
           <button id="offersTab" class="workspace-tab" type="button" role="tab" aria-selected="false" aria-controls="offersPanel" data-tab="offers" tabindex="-1">Offers</button>
         </nav>
 
@@ -85,21 +84,12 @@
           </div>
         </section>
 
-        <section id="routePanel" class="workspace-panel" role="tabpanel" aria-labelledby="routeTab" data-panel="route" hidden>
-          <p class="step-label">RACE DAY</p>
-          <h3>Route &amp; workouts</h3>
-          <div id="raceDayContent" class="workspace-placeholder" aria-live="polite">
-            <strong>Race details are coming soon.</strong>
-            <p>This section will hold the running route, workout order, movement standards, and race-day notes for this event.</p>
-          </div>
-        </section>
-
-        <section id="prepPanel" class="workspace-panel" role="tabpanel" aria-labelledby="prepTab" data-panel="prep" hidden>
-          <p class="step-label">BE READY</p>
-          <h3>Prep guides</h3>
-          <div id="prepContent" class="workspace-placeholder" aria-live="polite">
-            <strong>Preparation resources are coming soon.</strong>
-            <p>Event-specific guides, useful links, PDFs, packing notes, and training information will live here.</p>
+        <section id="guidesPanel" class="workspace-panel" role="tabpanel" aria-labelledby="guidesTab" data-panel="guides" hidden>
+          <p class="step-label">RACE RESOURCES</p>
+          <h3>Race Guides</h3>
+          <div id="guidesContent" class="workspace-placeholder" aria-live="polite">
+            <strong>Race guides are coming soon.</strong>
+            <p>Event-specific routes, workouts, handbooks, and downloads will live here.</p>
           </div>
         </section>
 

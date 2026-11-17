@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 let races = [];
 let activeRaceId = '';
 let contentLoadedRaceId = '';
+let legacyContent = {};
 const raceAdminApi = (path) => `/api/race-admin/${path}`;
 const adminTabs = Array.from(document.querySelectorAll('[data-admin-tab]'));
 
@@ -214,8 +215,8 @@ function itemValue(item, field) {
   return control.type === 'checkbox' ? control.checked : control.value;
 }
 
-function readPrepGuides() {
-  return Array.from($('prepGuideList').querySelectorAll('[data-prep-guide]')).map((item) => ({
+function readRaceGuides() {
+  return Array.from($('raceGuideList').querySelectorAll('[data-race-guide]')).map((item) => ({
     title: itemValue(item, 'title'), description: itemValue(item, 'description'), url: itemValue(item, 'url'),
   }));
 }
@@ -227,22 +228,22 @@ function readOffers() {
   }));
 }
 
-function renderPrepGuides(guides = []) {
-  const list = $('prepGuideList');
+function renderRaceGuides(guides = []) {
+  const list = $('raceGuideList');
   list.innerHTML = '';
   if (!guides.length) {
-    list.innerHTML = '<p class="admin-empty-state">No prep guides yet.</p>';
+    list.innerHTML = '<p class="admin-empty-state">No race guides yet.</p>';
     return;
   }
   guides.forEach((guide, index) => {
     const item = document.createElement('article');
     item.className = 'admin-list-item';
-    item.dataset.prepGuide = '';
+    item.dataset.raceGuide = '';
     item.innerHTML = `<div class="admin-item-heading"><strong>Guide ${index + 1}</strong><button class="admin-remove-button" type="button">Remove</button></div>
       <div class="admin-field-grid"><div><label for="prepTitle${index}">Title</label><input id="prepTitle${index}" data-field="title" maxlength="160"></div><div><label for="prepUrl${index}">HTTPS link</label><input id="prepUrl${index}" data-field="url" type="url" inputmode="url" placeholder="https://…"></div></div>
       <label for="prepDescription${index}">Description</label><textarea id="prepDescription${index}" data-field="description" rows="3" maxlength="1200"></textarea>`;
     ['title', 'description', 'url'].forEach((field) => { item.querySelector(`[data-field="${field}"]`).value = guide[field] || ''; });
-    item.querySelector('.admin-remove-button').addEventListener('click', () => { const next = readPrepGuides(); next.splice(index, 1); renderPrepGuides(next); });
+    item.querySelector('.admin-remove-button').addEventListener('click', () => { const next = readRaceGuides(); next.splice(index, 1); renderRaceGuides(next); });
     list.appendChild(item);
   });
 }
@@ -272,12 +273,14 @@ function renderOffers(offers = []) {
 }
 
 function fillContent(content = {}) {
-  $('routeDescription').value = content.routeDescription || '';
-  $('routeUrl').value = content.routeUrl || '';
-  $('workoutDescription').value = content.workoutDescription || '';
-  $('workoutUrl').value = content.workoutUrl || '';
-  $('raceDayNotes').value = content.raceDayNotes || '';
-  renderPrepGuides(content.prepGuides || []);
+  legacyContent = {
+    routeDescription: content.routeDescription || '',
+    routeUrl: content.routeUrl || '',
+    workoutDescription: content.workoutDescription || '',
+    workoutUrl: content.workoutUrl || '',
+    raceDayNotes: content.raceDayNotes || '',
+  };
+  renderRaceGuides(content.prepGuides || []);
   renderOffers(content.offers || []);
 }
 
@@ -332,11 +335,11 @@ $('raceControlsForm').addEventListener('submit', async (event) => {
   } finally { $('saveControls').disabled = false; }
 });
 
-$('addPrepGuide').addEventListener('click', () => {
-  const guides = readPrepGuides();
-  if (guides.length >= 12) return setMessage($('editorMessage'), 'A race can have up to 12 prep guides.', 'error-text');
-  guides.push({ title: '', description: '', url: '' }); renderPrepGuides(guides);
-  $('prepGuideList').lastElementChild?.querySelector('[data-field="title"]')?.focus();
+$('addRaceGuide').addEventListener('click', () => {
+  const guides = readRaceGuides();
+  if (guides.length >= 12) return setMessage($('editorMessage'), 'A race can have up to 12 race guides.', 'error-text');
+  guides.push({ title: '', description: '', url: '' }); renderRaceGuides(guides);
+  $('raceGuideList').lastElementChild?.querySelector('[data-field="title"]')?.focus();
 });
 
 $('addOffer').addEventListener('click', () => {
@@ -355,9 +358,8 @@ $('contentForm').addEventListener('submit', async (event) => {
     const data = await request(raceAdminApi('admin-race-content'), { method: 'PUT', body: JSON.stringify({
       raceId: activeRaceId,
       content: {
-        routeDescription: $('routeDescription').value, routeUrl: $('routeUrl').value,
-        workoutDescription: $('workoutDescription').value, workoutUrl: $('workoutUrl').value,
-        raceDayNotes: $('raceDayNotes').value, prepGuides: readPrepGuides(), offers: readOffers(),
+        ...legacyContent,
+        prepGuides: readRaceGuides(), offers: readOffers(),
       },
     }) });
     fillContent(data.content);

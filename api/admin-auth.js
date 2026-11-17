@@ -148,3 +148,15 @@ export function requestIsSameOrigin(req) {
     return false;
   }
 }
+
+export function requestHasAdminWriteOrigin(req) {
+  if (requestIsSameOrigin(req)) return true;
+  const origin = String(req.headers?.origin || '');
+  if (!origin) return true;
+  try {
+    const adminOrigin = new URL(String(process.env.ADMIN_SSO_ISSUER || 'https://admin.urbaniron.co')).origin;
+    return new URL(origin).origin === adminOrigin;
+  } catch {
+    return false;
+  }
+}

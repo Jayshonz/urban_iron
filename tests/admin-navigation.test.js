@@ -21,18 +21,29 @@ test('race admin does not expose photographer upload navigation', async () => {
   assert.doesNotMatch(script, /\/photographer\/events/);
 });
 
-test('race admin presents the shared password as the primary login', async () => {
+test('race admin relies on the central admin session without a duplicate login', async () => {
   const html = await readFile(publicFile('admin.html'), 'utf8');
-  assert.match(html, /id="adminLoginForm" class="admin-login-form"/);
-  assert.match(html, /shared Urban Iron admin password/);
-  assert.match(html, /Open admin portal/);
-  assert.doesNotMatch(html, /Continue with Urban Iron Admin/);
-  assert.doesNotMatch(html, /Temporary password fallback/);
+  assert.match(html, /id="adminEditor"/);
+  assert.doesNotMatch(html, /id="adminLoginForm"|Admin password|Continue with Google|Temporary password fallback/);
 });
 
-test('race admin routes Photo Admin navigation through the signed session handoff', async () => {
+test('race admin routes Photo Admin navigation through the central admin shell', async () => {
   const html = await readFile(publicFile('admin.html'), 'utf8');
-  assert.match(html, /href="\/api\/admin-handoff">Photos<\/a>/);
-  assert.match(html, /id="openPhotoAdmin"[^>]+href="\/api\/admin-handoff"/);
-  assert.doesNotMatch(html, /href="https:\/\/admin\.urbaniron\.co\/admin">(?:Photos|Photo admin|Manage photos)/);
+  assert.match(html, /href="\/photos">Photos<\/a>/);
+  assert.match(html, /id="openPhotoAdmin"[^>]+href="\/photos"/);
+});
+
+test('portal content admin uses structured race guides and offers only', async () => {
+  const [html, script] = await Promise.all([
+    readFile(publicFile('admin.html'), 'utf8'),
+    readFile(publicFile('admin.js'), 'utf8'),
+  ]);
+
+  assert.match(html, /<h3>Race Guides<\/h3>/);
+  assert.match(html, /id="addRaceGuide"/);
+  assert.match(html, /id="raceGuideList"/);
+  assert.match(html, /id="addOffer"/);
+  assert.match(html, /id="offerList"/);
+  assert.doesNotMatch(html, /id="(?:routeDescription|routeUrl|workoutDescription|workoutUrl|raceDayNotes)"/);
+  assert.match(script, /prepGuides: readRaceGuides\(\), offers: readOffers\(\)/);
 });

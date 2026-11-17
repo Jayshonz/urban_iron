@@ -23,3 +23,20 @@ test('athlete navigation typography matches the photo platform contract', async 
   assert.match(css, /\.platform-nav a\{[^}]*font-size:12px/);
   assert.match(css, /\.platform-nav a\{[^}]*font-weight:400/);
 });
+
+test('athlete race workspace exposes exactly Heats, Race Guides, and Offers', async () => {
+  const [html, script] = await Promise.all([
+    readFile(publicFile('index.html'), 'utf8'),
+    readFile(publicFile('app.js'), 'utf8'),
+  ]);
+  const tabs = html.match(/<nav class="workspace-tabs"[\s\S]*?<\/nav>/)?.[0] || '';
+
+  assert.equal((tabs.match(/class="workspace-tab(?: |")/g) || []).length, 3);
+  assert.match(tabs, />Heats<\/button>/);
+  assert.match(tabs, />Race Guides<\/button>/);
+  assert.match(tabs, />Offers<\/button>/);
+  assert.doesNotMatch(tabs, /Route &amp; Workouts|Prep Guides|Heat Lookup/);
+  assert.doesNotMatch(html, /id="(?:routePanel|prepPanel|raceDayContent|prepContent)"/);
+  assert.match(script, /renderRaceGuides\(data\.content\?\.prepGuides \|\| \[\]\)/);
+  assert.doesNotMatch(script, /content\.(?:routeDescription|routeUrl|workoutDescription|workoutUrl|raceDayNotes)/);
+});

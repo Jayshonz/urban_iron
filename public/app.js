@@ -3,7 +3,7 @@ let accessToken = null;
 let currentPerson = null;
 let checkInEnabled = false;
 let availableRaces = [];
-let raceDayContentRaceId = '';
+let portalContentRaceId = '';
 const $ = (id) => document.getElementById(id);
 
 async function api(path, body) {
@@ -70,7 +70,7 @@ function activateTab(tabName, { focus = false } = {}) {
   document.querySelectorAll('[data-panel]').forEach((panel) => {
     panel.hidden = panel.dataset.panel !== tabName;
   });
-  if (tabName !== 'heat' && selected && accessToken) loadRaceDayContent();
+  if (tabName !== 'heat' && selected && accessToken) loadPortalContent();
 }
 
 function setHeatAvailability(released) {
@@ -98,7 +98,7 @@ async function choose(race) {
   selected = race;
   accessToken = null;
   currentPerson = null;
-  raceDayContentRaceId = '';
+  portalContentRaceId = '';
   checkInEnabled = Boolean(race.checkInEnabled);
   $('home').hidden = true;
   $('raceFlow').hidden = false;
@@ -107,8 +107,7 @@ async function choose(race) {
   $('query').value = '';
   $('gateMessage').innerHTML = '';
   $('result').innerHTML = '';
-  renderRaceDayPlaceholder();
-  renderPrepPlaceholder();
+  renderGuidesPlaceholder();
   renderOffersPlaceholder();
   $('workspace').hidden = true;
   setHeatAvailability(race.heatsReleased !== false);
@@ -129,7 +128,7 @@ $('back').onclick = () => {
   selected = null;
   accessToken = null;
   currentPerson = null;
-  raceDayContentRaceId = '';
+  portalContentRaceId = '';
   $('raceFlow').hidden = true;
   $('workspace').hidden = true;
   activateTab('heat');
@@ -155,7 +154,7 @@ async function unlock() {
     $('gate').hidden = true;
     $('workspace').hidden = false;
     activateTab('heat');
-    loadRaceDayContent();
+    loadPortalContent();
     if (selected.heatsReleased) $('query').focus();
   } catch (error) {
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
@@ -172,7 +171,7 @@ async function unlockPasswordlessRace() {
     result.innerHTML = '';
     $('workspace').hidden = false;
     activateTab('heat');
-    loadRaceDayContent();
+    loadPortalContent();
     if (selected.heatsReleased) $('query').focus();
   } catch (error) {
     $('workspace').hidden = false;
@@ -367,7 +366,7 @@ async function showHeat(person) {
 
 function resetGate(message) {
   accessToken = null;
-  raceDayContentRaceId = '';
+  portalContentRaceId = '';
   $('workspace').hidden = true;
 
   if (selected && selected.requiresPassword === false) {
@@ -384,18 +383,11 @@ function resetGate(message) {
   $('password').focus();
 }
 
-function renderRaceDayPlaceholder(message = 'Race details are coming soon.') {
-  $('raceDayContent').className = 'workspace-placeholder';
-  $('raceDayContent').innerHTML = `
+function renderGuidesPlaceholder(message = 'Race guides are coming soon.') {
+  $('guidesContent').className = 'workspace-placeholder';
+  $('guidesContent').innerHTML = `
     <strong>${esc(message)}</strong>
-    <p>This section will hold the running route, workout order, movement standards, and race-day notes for this event.</p>`;
-}
-
-function renderPrepPlaceholder(message = 'Preparation resources are coming soon.') {
-  $('prepContent').className = 'workspace-placeholder';
-  $('prepContent').innerHTML = `
-    <strong>${esc(message)}</strong>
-    <p>Event-specific guides, useful links, PDFs, packing notes, and training information will live here.</p>`;
+    <p>Event-specific routes, workouts, handbooks, and downloads will live here.</p>`;
 }
 
 function renderOffersPlaceholder(message = 'Partner offers are coming soon.') {
@@ -405,39 +397,13 @@ function renderOffersPlaceholder(message = 'Partner offers are coming soon.') {
     <p>Race-specific offers and coupon codes will appear here when they are available.</p>`;
 }
 
-function raceDaySection(label, body, url, linkLabel) {
-  if (!body && !url) return '';
-  return `
-    <section class="race-day-section">
-      <p class="race-day-label">${esc(label)}</p>
-      ${body ? `<div class="race-day-copy">${esc(body).replace(/\n/g, '<br>')}</div>` : ''}
-      ${url ? `<a class="race-day-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(linkLabel)} <span aria-hidden="true">↗</span></a>` : ''}
-    </section>`;
-}
-
-function renderRaceDayContent(content) {
-  const sections = [
-    raceDaySection('Running route', content.routeDescription, content.routeUrl, 'Open route map'),
-    raceDaySection('Workouts', content.workoutDescription, content.workoutUrl, 'Open workout details'),
-    raceDaySection('Important notes', content.raceDayNotes, '', ''),
-  ].filter(Boolean);
-  if (!sections.length) {
-    renderRaceDayPlaceholder();
-  } else {
-    $('raceDayContent').className = 'race-day-content';
-    $('raceDayContent').innerHTML = sections.join('');
-  }
-  renderPrepGuides(content.prepGuides || []);
-  renderOffers(content.offers || []);
-}
-
-function renderPrepGuides(guides) {
-  if (!guides.length) return renderPrepPlaceholder();
-  $('prepContent').className = 'prep-guide-list';
-  $('prepContent').innerHTML = guides.map((guide) => `
+function renderRaceGuides(guides) {
+  if (!guides.length) return renderGuidesPlaceholder();
+  $('guidesContent').className = 'prep-guide-list';
+  $('guidesContent').innerHTML = guides.map((guide) => `
     <article class="prep-guide-card">
       <div>
-        <p class="prep-guide-label">PREP RESOURCE</p>
+        <p class="prep-guide-label">RACE RESOURCE</p>
         <h4>${esc(guide.title)}</h4>
         ${guide.description ? `<p>${esc(guide.description).replace(/\n/g, '<br>')}</p>` : ''}
       </div>
@@ -467,14 +433,12 @@ function renderOffers(offers) {
     </article>`).join('');
 }
 
-async function loadRaceDayContent() {
-  if (!selected || !accessToken || raceDayContentRaceId === selected.id) return;
+async function loadPortalContent() {
+  if (!selected || !accessToken || portalContentRaceId === selected.id) return;
   const requestedRaceId = selected.id;
-  raceDayContentRaceId = requestedRaceId;
-  $('raceDayContent').className = 'workspace-placeholder';
-  $('raceDayContent').innerHTML = '<strong>Loading race-day information…</strong>';
-  $('prepContent').className = 'workspace-placeholder';
-  $('prepContent').innerHTML = '<strong>Loading prep guides…</strong>';
+  portalContentRaceId = requestedRaceId;
+  $('guidesContent').className = 'workspace-placeholder';
+  $('guidesContent').innerHTML = '<strong>Loading race guides…</strong>';
   $('offersContent').className = 'workspace-placeholder';
   $('offersContent').innerHTML = '<strong>Loading partner offers…</strong>';
   try {
@@ -483,13 +447,13 @@ async function loadRaceDayContent() {
       accessToken,
     });
     if (!selected || selected.id !== requestedRaceId) return;
-    renderRaceDayContent(data.content || {});
+    renderRaceGuides(data.content?.prepGuides || []);
+    renderOffers(data.content?.offers || []);
   } catch (error) {
-    raceDayContentRaceId = '';
+    portalContentRaceId = '';
     if (error.message.toLowerCase().includes('session expired')) resetGate(error.message);
     else {
-      renderRaceDayPlaceholder('Race-day information is temporarily unavailable.');
-      renderPrepPlaceholder('Prep guides are temporarily unavailable.');
+      renderGuidesPlaceholder('Race guides are temporarily unavailable.');
       renderOffersPlaceholder('Partner offers are temporarily unavailable.');
     }
   }

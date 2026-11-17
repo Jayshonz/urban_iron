@@ -1,3 +1,15 @@
+# Current task: Repair content saves and simplify athlete resources
+
+## Plan
+
+- [x] Allow authenticated writes from the canonical admin proxy origin without weakening origin checks.
+- [x] Reduce the athlete portal to Heats, Race Guides, and Offers.
+- [x] Make Race Guides and Offers structured-entry-only in Race Admin.
+- [x] Add regression coverage for the origin policy and portal/editor contracts.
+- [ ] Run full checks, deploy, and verify production behavior.
+
+---
+
 # Current task: Single-domain Urban Iron admin
 
 ## Plan
