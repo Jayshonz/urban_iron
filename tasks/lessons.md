@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Verify analytics pricing before selecting telemetry
+
+**Trigger:** Vercel Analytics was initially recommended for simplicity, but the user prioritizes avoiding variable analytics charges and requested GA4 once pricing was clarified.
+**Pattern:** Operational convenience can obscure metered-event costs, especially when pageviews and product actions are each billable events.
+**Rule:** Before selecting an analytics provider, verify the current plan, included usage, overage pricing, privacy implications, and required event depth. Present the cost comparison before implementation and avoid running duplicate trackers by default.
+**Date:** 2026-11-18
+
 ## Lesson: Reverse proxies change the browser origin contract
 
 **Trigger:** Race Admin was moved under `admin.urbaniron.co`, but proxied write requests still reached the Athlete backend, whose CSRF check accepted only the backend host.
