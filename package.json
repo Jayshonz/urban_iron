@@ -4,6 +4,7 @@
   "version": "0.2.1",
   "type": "module",
   "scripts": {
+    "check:analytics": "node --check public/analytics.js",
     "dev": "vercel dev",
     "test": "node --test",
     "check": "node --check public/app.js && node --check public/admin.js && node --check api/admin-auth.js && node --check api/admin-session.js && node --check api/admin-sso.js && node --check api/admin-sso-contract.js && node --check api/admin-handoff.js && node --check api/admin-race-content.js && node --check api/admin-race-registry.js && node --check api/admin-race-registry-store.js && node --check api/race-content.js && node --check api/race-content-store.js && node --check api/race-registry.js && node --check api/data.js && node --check api/lookup.js && node --check api/heat.js && node --check api/check-in.js"
