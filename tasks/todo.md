@@ -1,4 +1,22 @@
-# Current task: Repair content saves and simplify athlete resources
+# Current task: Add Google Analytics across Urban Iron portals
+
+## Plan
+
+- [ ] Confirm or create a dedicated Urban Iron GA4 property and measurement ID.
+- [ ] Add pageview and privacy-safe product-event tracking to Athlete/Race.
+- [ ] Add pageview and privacy-safe product-event tracking to Photos/Photographer/Admin.
+- [ ] Add regression coverage and run both projects' checks.
+- [ ] Deploy and verify production events by hostname and surface.
+
+## Progress
+
+- [x] Confirmed Vercel Web Analytics is disabled on both projects.
+- [x] Confirmed Vercel Web Analytics can generate usage charges while GA4 Standard is free.
+- [x] Chosen GA4 as the sole analytics system to avoid duplicate tracking.
+
+---
+
+# Previous task: Repair content saves and simplify athlete resources
 
 ## Plan
 
