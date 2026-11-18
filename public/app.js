@@ -5,6 +5,7 @@ let checkInEnabled = false;
 let availableRaces = [];
 let portalContentRaceId = '';
 const $ = (id) => document.getElementById(id);
+const track = (eventName, parameters = {}) => window.urbanIronAnalytics?.track(eventName, parameters);
 
 async function api(path, body) {
   const response = await fetch(path, {
@@ -71,6 +72,7 @@ function activateTab(tabName, { focus = false } = {}) {
     panel.hidden = panel.dataset.panel !== tabName;
   });
   if (tabName !== 'heat' && selected && accessToken) loadPortalContent();
+  if (selected && accessToken) track('portal_tab_viewed', { race_id: selected.id, tab_name: tabName });
 }
 
 function setHeatAvailability(released) {
@@ -113,6 +115,7 @@ async function choose(race) {
   setHeatAvailability(race.heatsReleased !== false);
   activateTab('heat');
   window.scrollTo({ top: 0, behavior: 'auto' });
+  track('race_selected', { race_id: race.id });
 
   if (race.requiresPassword === false || race.id === 'la-2026-10-04') {
     $('gate').hidden = true;
@@ -155,8 +158,10 @@ async function unlock() {
     $('workspace').hidden = false;
     activateTab('heat');
     loadPortalContent();
+    track('portal_unlocked', { race_id: selected.id, password_required: true });
     if (selected.heatsReleased) $('query').focus();
   } catch (error) {
+    track('portal_unlock_failed', { race_id: selected.id });
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
   }
 }
@@ -172,6 +177,7 @@ async function unlockPasswordlessRace() {
     $('workspace').hidden = false;
     activateTab('heat');
     loadPortalContent();
+    track('portal_unlocked', { race_id: selected.id, password_required: false });
     if (selected.heatsReleased) $('query').focus();
   } catch (error) {
     $('workspace').hidden = false;
@@ -197,10 +203,12 @@ async function search() {
     });
     checkInEnabled = Boolean(data.checkInEnabled);
     if (!data.results.length) {
+      track('heat_lookup_completed', { race_id: selected.id, result_count: 0 });
       result.innerHTML = '<div class="error">No matches found. Try a first name, last name, or registration email.</div>';
       return;
     }
     if (data.results.length === 1) {
+      track('heat_lookup_completed', { race_id: selected.id, result_count: 1 });
       renderParticipant(data.results[0]);
       return;
     }
@@ -214,6 +222,7 @@ async function search() {
           </button>
         `).join('')}
       </div>`;
+    track('heat_lookup_completed', { race_id: selected.id, result_count: data.results.length });
     result.querySelectorAll('.match').forEach((button) => {
       button.onclick = () => renderParticipant(data.results[Number(button.dataset.index)]);
     });
@@ -319,6 +328,7 @@ async function confirmCheckIn() {
       bib: currentPerson.bib,
     });
     currentPerson = { ...currentPerson, checkedIn: true };
+    track('athlete_check_in_completed', { race_id: selected.id });
     renderCheckIn(currentPerson);
   } catch (error) {
     button.disabled = false;
@@ -400,21 +410,26 @@ function renderOffersPlaceholder(message = 'Partner offers are coming soon.') {
 function renderRaceGuides(guides) {
   if (!guides.length) return renderGuidesPlaceholder();
   $('guidesContent').className = 'prep-guide-list';
-  $('guidesContent').innerHTML = guides.map((guide) => `
+  $('guidesContent').innerHTML = guides.map((guide, index) => `
     <article class="prep-guide-card">
       <div>
         <p class="prep-guide-label">RACE RESOURCE</p>
         <h4>${esc(guide.title)}</h4>
         ${guide.description ? `<p>${esc(guide.description).replace(/\n/g, '<br>')}</p>` : ''}
       </div>
-      <a class="prep-guide-link" href="${esc(guide.url)}" target="_blank" rel="noopener noreferrer">Open guide <span aria-hidden="true">↗</span></a>
+      <a class="prep-guide-link" data-resource-index="${index}" href="${esc(guide.url)}" target="_blank" rel="noopener noreferrer">Open guide <span aria-hidden="true">↗</span></a>
     </article>`).join('');
+  $('guidesContent').querySelectorAll('.prep-guide-link').forEach((link) => {
+    link.addEventListener('click', () => track('race_guide_opened', {
+      race_id: selected?.id || '', resource_index: Number(link.dataset.resourceIndex),
+    }));
+  });
 }
 
 function renderOffers(offers) {
   if (!offers.length) return renderOffersPlaceholder();
   $('offersContent').className = 'offer-list';
-  $('offersContent').innerHTML = offers.map((offer) => `
+  $('offersContent').innerHTML = offers.map((offer, index) => `
     <article class="offer-card">
       <div class="offer-logo-wrap">
         ${offer.logoUrl
@@ -428,9 +443,14 @@ function renderOffers(offers) {
       </div>
       <div class="offer-action">
         ${offer.code ? `<span class="offer-code-label">Use code</span><code class="offer-code">${esc(offer.code)}</code>` : ''}
-        <a class="offer-link" href="${esc(offer.url)}" target="_blank" rel="noopener noreferrer">View offer <span aria-hidden="true">↗</span></a>
+        <a class="offer-link" data-resource-index="${index}" href="${esc(offer.url)}" target="_blank" rel="noopener noreferrer">View offer <span aria-hidden="true">↗</span></a>
       </div>
     </article>`).join('');
+  $('offersContent').querySelectorAll('.offer-link').forEach((link) => {
+    link.addEventListener('click', () => track('partner_offer_opened', {
+      race_id: selected?.id || '', resource_index: Number(link.dataset.resourceIndex),
+    }));
+  });
 }
 
 async function loadPortalContent() {
