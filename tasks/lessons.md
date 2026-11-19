@@ -1,5 +1,12 @@
 # Project lessons
 
+## Lesson: Analytics must use operational language
+
+**Trigger:** The platform was instrumented successfully, but raw developer-oriented event names did not immediately answer which race, portal surface, or public link an operator was reviewing.
+**Pattern:** Technically correct telemetry can still be unusable when naming and dimensions do not match the questions the business asks.
+**Rule:** Prefix events by audience or surface, attach readable race and public-resource metadata, and design reports around concrete questions such as race sign-ins and link clicks before declaring analytics complete.
+**Date:** 2026-11-19
+
 ## Lesson: Verify analytics pricing before selecting telemetry
 
 **Trigger:** Vercel Analytics was initially recommended for simplicity, but the user prioritizes avoiding variable analytics charges and requested GA4 once pricing was clarified.
