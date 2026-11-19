@@ -1,18 +1,37 @@
-# Current task: Add Google Analytics across Urban Iron portals
+# Current task: Make Urban Iron analytics race-readable
 
 ## Plan
 
-- [ ] Confirm or create a dedicated Urban Iron GA4 property and measurement ID.
-- [ ] Add pageview and privacy-safe product-event tracking to Athlete/Race.
-- [ ] Add pageview and privacy-safe product-event tracking to Photos/Photographer/Admin.
-- [ ] Add regression coverage and run both projects' checks.
-- [ ] Deploy and verify production events by hostname and surface.
+- [x] Rename custom events with clear Athlete, Race Admin, and Photographer prefixes.
+- [x] Attach readable race and resource metadata without personal data.
+- [ ] Add GA4 custom dimensions for race and resource reporting.
+- [ ] Run regression checks, deploy both projects, and verify Miami-ready events.
+- [ ] Recommend an operational reporting cadence.
+
+---
+
+# Previous task: Add Google Analytics across Urban Iron portals
+
+## Plan
+
+- [x] Confirm or create a dedicated Urban Iron GA4 property and measurement ID.
+- [x] Add pageview and privacy-safe product-event tracking to Athlete/Race.
+- [x] Add pageview and privacy-safe product-event tracking to Photos/Photographer/Admin.
+- [x] Add regression coverage and run both projects' checks.
+- [x] Deploy and verify production events by hostname and surface.
 
 ## Progress
 
 - [x] Confirmed Vercel Web Analytics is disabled on both projects.
 - [x] Confirmed Vercel Web Analytics can generate usage charges while GA4 Standard is free.
 - [x] Chosen GA4 as the sole analytics system to avoid duplicate tracking.
+
+## Verification
+
+- Athlete/Race checks pass: 36 tests, 0 failures; syntax checks pass.
+- Photo/Photographer/Admin preview and production builds are Ready.
+- GA4 Realtime received both `Urban Iron Athlete Portal` and `Urban Iron Photos` pageviews.
+- The GA4 property is renamed `Urban Iron Platform`, email redaction is active, and custom dimensions exist for platform surface, race, and portal tab.
 
 ---
 
