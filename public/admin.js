@@ -330,7 +330,7 @@ $('raceControlsForm').addEventListener('submit', async (event) => {
     races = races.map((race) => race.id === data.race.id ? data.race : race);
     renderRaceWorkspace();
     setMessage($('controlsMessage'), 'Race controls saved.', 'success-text');
-    track('race_controls_saved', { race_id: activeRaceId });
+    track('admin_race_controls_saved', { race_id: activeRaceId });
   } catch (error) {
     if (error.status === 401) return showLogin('Your admin session expired. Sign in again.');
     setMessage($('controlsMessage'), error.message, 'error-text');
@@ -366,7 +366,7 @@ $('contentForm').addEventListener('submit', async (event) => {
     }) });
     fillContent(data.content);
     setMessage($('editorMessage'), 'Portal content saved.', 'success-text');
-    track('race_content_saved', { race_id: activeRaceId });
+    track('admin_race_content_saved', { race_id: activeRaceId });
   } catch (error) {
     if (error.status === 401) return showLogin('Your admin session expired. Sign in again.');
     setMessage($('editorMessage'), error.message, 'error-text');
@@ -385,7 +385,7 @@ async function start() {
       return showLogin('Race Admin access is not configured.');
     }
     if (session.authenticated) {
-      track('admin_session_started', { workspace: 'races' });
+      track('admin_race_session_started', { workspace: 'races' });
       await initializeEditor();
     } else showLogin();
   } catch (error) { showLogin(error.message); }

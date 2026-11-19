@@ -6,6 +6,10 @@ let availableRaces = [];
 let portalContentRaceId = '';
 const $ = (id) => document.getElementById(id);
 const track = (eventName, parameters = {}) => window.urbanIronAnalytics?.track(eventName, parameters);
+const raceAnalytics = (race = selected) => ({
+  race_id: race?.id || '',
+  race_name: [race?.city, race?.date].filter(Boolean).join(' · '),
+});
 
 async function api(path, body) {
   const response = await fetch(path, {
@@ -72,7 +76,7 @@ function activateTab(tabName, { focus = false } = {}) {
     panel.hidden = panel.dataset.panel !== tabName;
   });
   if (tabName !== 'heat' && selected && accessToken) loadPortalContent();
-  if (selected && accessToken) track('portal_tab_viewed', { race_id: selected.id, tab_name: tabName });
+  if (selected && accessToken) track('athlete_portal_tab_viewed', { ...raceAnalytics(), tab_name: tabName });
 }
 
 function setHeatAvailability(released) {
@@ -115,7 +119,7 @@ async function choose(race) {
   setHeatAvailability(race.heatsReleased !== false);
   activateTab('heat');
   window.scrollTo({ top: 0, behavior: 'auto' });
-  track('race_selected', { race_id: race.id });
+  track('athlete_race_selected', raceAnalytics(race));
 
   if (race.requiresPassword === false || race.id === 'la-2026-10-04') {
     $('gate').hidden = true;
@@ -158,10 +162,10 @@ async function unlock() {
     $('workspace').hidden = false;
     activateTab('heat');
     loadPortalContent();
-    track('portal_unlocked', { race_id: selected.id, password_required: true });
+    track('athlete_portal_sign_in_completed', { ...raceAnalytics(), password_required: true });
     if (selected.heatsReleased) $('query').focus();
   } catch (error) {
-    track('portal_unlock_failed', { race_id: selected.id });
+    track('athlete_portal_sign_in_failed', raceAnalytics());
     message.innerHTML = `<div class="error">${esc(error.message)}</div>`;
   }
 }
@@ -177,7 +181,7 @@ async function unlockPasswordlessRace() {
     $('workspace').hidden = false;
     activateTab('heat');
     loadPortalContent();
-    track('portal_unlocked', { race_id: selected.id, password_required: false });
+    track('athlete_portal_sign_in_completed', { ...raceAnalytics(), password_required: false });
     if (selected.heatsReleased) $('query').focus();
   } catch (error) {
     $('workspace').hidden = false;
@@ -203,12 +207,12 @@ async function search() {
     });
     checkInEnabled = Boolean(data.checkInEnabled);
     if (!data.results.length) {
-      track('heat_lookup_completed', { race_id: selected.id, result_count: 0 });
+      track('athlete_heat_lookup_completed', { ...raceAnalytics(), result_count: 0 });
       result.innerHTML = '<div class="error">No matches found. Try a first name, last name, or registration email.</div>';
       return;
     }
     if (data.results.length === 1) {
-      track('heat_lookup_completed', { race_id: selected.id, result_count: 1 });
+      track('athlete_heat_lookup_completed', { ...raceAnalytics(), result_count: 1 });
       renderParticipant(data.results[0]);
       return;
     }
@@ -222,7 +226,7 @@ async function search() {
           </button>
         `).join('')}
       </div>`;
-    track('heat_lookup_completed', { race_id: selected.id, result_count: data.results.length });
+    track('athlete_heat_lookup_completed', { ...raceAnalytics(), result_count: data.results.length });
     result.querySelectorAll('.match').forEach((button) => {
       button.onclick = () => renderParticipant(data.results[Number(button.dataset.index)]);
     });
@@ -328,7 +332,7 @@ async function confirmCheckIn() {
       bib: currentPerson.bib,
     });
     currentPerson = { ...currentPerson, checkedIn: true };
-    track('athlete_check_in_completed', { race_id: selected.id });
+    track('athlete_check_in_completed', raceAnalytics());
     renderCheckIn(currentPerson);
   } catch (error) {
     button.disabled = false;
@@ -420,9 +424,13 @@ function renderRaceGuides(guides) {
       <a class="prep-guide-link" data-resource-index="${index}" href="${esc(guide.url)}" target="_blank" rel="noopener noreferrer">Open guide <span aria-hidden="true">↗</span></a>
     </article>`).join('');
   $('guidesContent').querySelectorAll('.prep-guide-link').forEach((link) => {
-    link.addEventListener('click', () => track('race_guide_opened', {
-      race_id: selected?.id || '', resource_index: Number(link.dataset.resourceIndex),
-    }));
+    link.addEventListener('click', () => {
+      const resourceIndex = Number(link.dataset.resourceIndex);
+      track('athlete_race_guide_clicked', {
+        ...raceAnalytics(), resource_type: 'race_guide',
+        resource_title: guides[resourceIndex]?.title || 'Untitled guide', resource_index: resourceIndex,
+      });
+    });
   });
 }
 
@@ -447,9 +455,13 @@ function renderOffers(offers) {
       </div>
     </article>`).join('');
   $('offersContent').querySelectorAll('.offer-link').forEach((link) => {
-    link.addEventListener('click', () => track('partner_offer_opened', {
-      race_id: selected?.id || '', resource_index: Number(link.dataset.resourceIndex),
-    }));
+    link.addEventListener('click', () => {
+      const resourceIndex = Number(link.dataset.resourceIndex);
+      track('athlete_offer_clicked', {
+        ...raceAnalytics(), resource_type: 'partner_offer',
+        resource_title: offers[resourceIndex]?.title || 'Untitled offer', resource_index: resourceIndex,
+      });
+    });
   });
 }
 
